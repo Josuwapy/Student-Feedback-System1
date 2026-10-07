@@ -1,18 +1,15 @@
 import React from 'react';
 import { 
   GraduationCap, 
-  PenTool, 
-  BarChart3, 
-  MessageSquareText, 
-  BookOpen, 
   RotateCcw,
-  ShieldCheck,
-  Clock,
-  ShieldAlert,
-  UserCheck,
-  CheckCircle2,
+  Sparkles,
+  Inbox,
+  PenLine,
+  Search,
+  BarChart3,
+  BookOpen,
   Building2,
-  Info
+  ShieldCheck
 } from 'lucide-react';
 import { NavigationTab, UserRole } from '../types';
 
@@ -37,65 +34,61 @@ export const Navbar: React.FC<NavbarProps> = ({
 }) => {
   return (
     <>
-      {/* Top Header */}
-      <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200/80 shadow-xs">
+      {/* Top Header strictly adhering to Top Bar Contract */}
+      <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200/80 transition-colors">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
+          <div className="flex items-center justify-between h-16 gap-4">
             
-            {/* Logo & Title */}
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 via-indigo-700 to-indigo-800 flex items-center justify-center text-white shadow-sm shadow-indigo-200">
-                <GraduationCap className="w-6 h-6 text-amber-300" />
-              </div>
-              <div>
-                <div className="flex items-center gap-2">
-                  <h1 className="text-base sm:text-lg font-bold text-slate-900 tracking-tight leading-none">
-                    Student Feedback System
-                  </h1>
-                  <span className="hidden sm:inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-indigo-50 text-indigo-700 border border-indigo-200">
-                    Online Portal
+            {/* Zone 1: Single text element Brand Wordmark */}
+            <div className="flex items-center gap-3 shrink-0">
+              <button
+                type="button"
+                onClick={() => onSelectTab('submit')}
+                className="flex items-center gap-2.5 text-left text-slate-900 hover:text-indigo-950 transition-colors group cursor-pointer"
+              >
+                <div className="w-9 h-9 rounded-lg bg-slate-900 flex items-center justify-center text-white shadow-2xs group-hover:bg-indigo-900 transition-colors">
+                  <GraduationCap className="w-5 h-5 text-amber-300" />
+                </div>
+                <div className="flex flex-col">
+                  <span className="font-display font-semibold text-base sm:text-lg tracking-tight leading-none text-slate-900">
+                    Torres Capitol College
+                  </span>
+                  <span className="text-[11px] font-medium text-slate-500 tracking-normal mt-0.5">
+                    Student Feedback & Resolution Portal
                   </span>
                 </div>
-                <p className="text-[11px] text-slate-500 hidden sm:block mt-0.5">
-                  Torres Capitol College • Services, Facilities, Activities & Academics
-                </p>
-              </div>
+              </button>
             </div>
 
-            {/* Desktop Navigation Tabs */}
-            <nav className="hidden lg:flex items-center gap-1 bg-slate-100/90 p-1 rounded-xl border border-slate-200/60" aria-label="Main Navigation">
+            {/* Zone 2: Navigation Links (Clean text with subtle indicators) */}
+            <nav className="hidden xl:flex items-center gap-1 text-xs font-medium" aria-label="Main Navigation">
               
-              {/* Submit Feedback */}
               <button
                 id="nav-tab-submit"
                 type="button"
                 onClick={() => onSelectTab('submit')}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                className={`px-3 py-2 rounded-lg transition-colors whitespace-nowrap cursor-pointer ${
                   activeTab === 'submit'
-                    ? 'bg-white text-indigo-700 shadow-xs'
-                    : 'text-slate-600 hover:text-slate-900 hover:bg-white/50'
+                    ? 'bg-slate-100 text-slate-900 font-semibold'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
                 }`}
               >
-                <PenTool className="w-3.5 h-3.5" />
-                <span>Submit Feedback</span>
+                Submit Feedback
               </button>
 
-              {/* Track Issue / Concerns */}
               <button
                 id="nav-tab-track"
                 type="button"
                 onClick={() => onSelectTab('track')}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                className={`px-3 py-2 rounded-lg transition-colors whitespace-nowrap cursor-pointer ${
                   activeTab === 'track'
-                    ? 'bg-white text-indigo-700 shadow-xs'
-                    : 'text-slate-600 hover:text-slate-900 hover:bg-white/50'
+                    ? 'bg-slate-100 text-slate-900 font-semibold'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
                 }`}
               >
-                <Clock className="w-3.5 h-3.5" />
-                <span>Track Issues</span>
+                Track Tickets
               </button>
 
-              {/* Administrator Resolution Desk */}
               <button
                 id="nav-tab-admin-resolver"
                 type="button"
@@ -103,94 +96,85 @@ export const Navbar: React.FC<NavbarProps> = ({
                   onSelectTab('admin_resolver');
                   if (userRole !== 'admin') onToggleRole('admin');
                 }}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all relative ${
+                className={`px-3 py-2 rounded-lg transition-colors whitespace-nowrap inline-flex items-center gap-1.5 cursor-pointer ${
                   activeTab === 'admin_resolver'
-                    ? 'bg-indigo-600 text-white shadow-xs'
-                    : 'text-slate-700 hover:text-indigo-700 hover:bg-indigo-50/50'
+                    ? 'bg-slate-900 text-white font-semibold'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
                 }`}
               >
-                <ShieldAlert className="w-3.5 h-3.5" />
                 <span>Resolution Desk</span>
                 {pendingAdminCount > 0 && (
-                  <span className={`px-1.5 py-0.2 rounded-full text-[10px] font-bold ${
+                  <span className={`px-1.5 py-0.2 rounded-md text-[10px] font-mono-numbers font-semibold ${
                     activeTab === 'admin_resolver' 
-                      ? 'bg-rose-500 text-white' 
-                      : 'bg-amber-100 text-amber-800'
+                      ? 'bg-white/20 text-white' 
+                      : 'bg-amber-100 text-amber-900'
                   }`}>
                     {pendingAdminCount}
                   </span>
                 )}
               </button>
 
-              {/* Submissions & Voice */}
               <button
                 id="nav-tab-feedback-list"
                 type="button"
                 onClick={() => onSelectTab('feedback_list')}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                className={`px-3 py-2 rounded-lg transition-colors whitespace-nowrap inline-flex items-center gap-1.5 cursor-pointer ${
                   activeTab === 'feedback_list'
-                    ? 'bg-white text-indigo-700 shadow-xs'
-                    : 'text-slate-600 hover:text-slate-900 hover:bg-white/50'
+                    ? 'bg-slate-100 text-slate-900 font-semibold'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
                 }`}
               >
-                <MessageSquareText className="w-3.5 h-3.5" />
                 <span>Submissions</span>
-                <span className="px-1.5 py-0.2 rounded-full text-[10px] font-semibold bg-slate-200/80 text-slate-700">
-                  {feedbackCount}
+                <span className="text-[10px] text-slate-400 font-mono-numbers">
+                  ({feedbackCount})
                 </span>
               </button>
 
-              {/* Analytics */}
               <button
                 id="nav-tab-analytics"
                 type="button"
                 onClick={() => onSelectTab('analytics')}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                className={`px-3 py-2 rounded-lg transition-colors whitespace-nowrap cursor-pointer ${
                   activeTab === 'analytics'
-                    ? 'bg-white text-indigo-700 shadow-xs'
-                    : 'text-slate-600 hover:text-slate-900 hover:bg-white/50'
+                    ? 'bg-slate-100 text-slate-900 font-semibold'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
                 }`}
               >
-                <BarChart3 className="w-3.5 h-3.5" />
-                <span>Analytics</span>
+                Analytics
               </button>
 
-              {/* Courses */}
               <button
                 id="nav-tab-courses"
                 type="button"
                 onClick={() => onSelectTab('courses')}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                className={`px-3 py-2 rounded-lg transition-colors whitespace-nowrap cursor-pointer ${
                   activeTab === 'courses'
-                    ? 'bg-white text-indigo-700 shadow-xs'
-                    : 'text-slate-600 hover:text-slate-900 hover:bg-white/50'
+                    ? 'bg-slate-100 text-slate-900 font-semibold'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
                 }`}
               >
-                <BookOpen className="w-3.5 h-3.5" />
-                <span>Courses</span>
+                Curriculum
               </button>
 
-              {/* About Torres Capitol College */}
               <button
                 id="nav-tab-school-info"
                 type="button"
                 onClick={() => onSelectTab('school_info')}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                className={`px-3 py-2 rounded-lg transition-colors whitespace-nowrap cursor-pointer ${
                   activeTab === 'school_info'
-                    ? 'bg-white text-indigo-700 shadow-xs'
-                    : 'text-slate-600 hover:text-slate-900 hover:bg-white/50'
+                    ? 'bg-slate-100 text-slate-900 font-semibold'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
                 }`}
               >
-                <Building2 className="w-3.5 h-3.5" />
-                <span>About TCC</span>
+                About TCC
               </button>
             </nav>
 
-            {/* Header Right Actions: Role Toggle & Reset */}
+            {/* Zone 3: Actions & Role Persona Switcher */}
             <div className="flex items-center gap-2">
               
-              {/* Target Users 3-Way Role Switcher */}
-              <div className="flex items-center bg-slate-100 p-0.5 rounded-xl border border-slate-200 text-xs shadow-2xs">
+              {/* Target Users Role Switcher */}
+              <div className="flex items-center bg-slate-100 p-0.5 rounded-lg border border-slate-200/80 text-xs">
                 <button
                   id="role-toggle-student"
                   type="button"
@@ -198,9 +182,9 @@ export const Navbar: React.FC<NavbarProps> = ({
                     onToggleRole('student');
                     if (activeTab === 'admin_resolver') onSelectTab('submit');
                   }}
-                  className={`px-2.5 py-1 rounded-lg font-bold transition-all ${
+                  className={`px-2.5 py-1 rounded-md font-medium transition-colors cursor-pointer ${
                     userRole === 'student'
-                      ? 'bg-indigo-600 text-white shadow-xs'
+                      ? 'bg-white text-slate-900 shadow-2xs font-semibold'
                       : 'text-slate-600 hover:text-slate-900'
                   }`}
                   title="Switch to Student Persona"
@@ -215,14 +199,14 @@ export const Navbar: React.FC<NavbarProps> = ({
                     onToggleRole('teacher');
                     if (activeTab === 'submit') onSelectTab('feedback_list');
                   }}
-                  className={`px-2.5 py-1 rounded-lg font-bold transition-all ${
+                  className={`px-2.5 py-1 rounded-md font-medium transition-colors cursor-pointer ${
                     userRole === 'teacher' || userRole === 'faculty'
-                      ? 'bg-indigo-600 text-white shadow-xs'
+                      ? 'bg-white text-slate-900 shadow-2xs font-semibold'
                       : 'text-slate-600 hover:text-slate-900'
                   }`}
                   title="Switch to Teacher / Faculty Persona"
                 >
-                  Teacher
+                  Faculty
                 </button>
 
                 <button
@@ -232,9 +216,9 @@ export const Navbar: React.FC<NavbarProps> = ({
                     onToggleRole('admin');
                     onSelectTab('admin_resolver');
                   }}
-                  className={`px-2.5 py-1 rounded-lg font-bold transition-all ${
+                  className={`px-2.5 py-1 rounded-md font-medium transition-colors cursor-pointer ${
                     userRole === 'admin'
-                      ? 'bg-indigo-600 text-white shadow-xs'
+                      ? 'bg-white text-slate-900 shadow-2xs font-semibold'
                       : 'text-slate-600 hover:text-slate-900'
                   }`}
                   title="Switch to Administrator Persona"
@@ -249,96 +233,76 @@ export const Navbar: React.FC<NavbarProps> = ({
                 type="button"
                 onClick={onResetData}
                 title="Reset to sample evaluation and complaint tickets"
-                className="hidden sm:flex items-center gap-1.5 text-xs text-slate-500 hover:text-slate-700 hover:bg-slate-100 px-2.5 py-1.5 rounded-lg border border-slate-200 transition-colors"
+                className="hidden sm:inline-flex items-center gap-1.5 text-xs text-slate-500 hover:text-slate-800 hover:bg-slate-100 px-2.5 py-1.5 rounded-lg border border-slate-200/80 transition-colors cursor-pointer"
               >
-                <RotateCcw className="w-3.5 h-3.5" />
-                <span>Reset Demo</span>
+                <RotateCcw className="w-3.5 h-3.5 text-slate-400" />
+                <span>Reset</span>
               </button>
             </div>
           </div>
         </div>
       </header>
 
-      {/* Mobile Bottom Navigation Bar (5 tabs with 48px min touch targets) */}
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-lg border-t border-slate-200/90 shadow-lg px-2 py-1">
+      {/* Mobile Navigation Bar */}
+      <div className="xl:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-lg border-t border-slate-200/90 shadow-lg px-2 py-1">
         <div className="grid grid-cols-5 gap-1 max-w-lg mx-auto">
           
           <button
-            id="mobile-nav-submit"
             type="button"
             onClick={() => onSelectTab('submit')}
-            className={`flex flex-col items-center justify-center py-1.5 px-1 rounded-xl text-[11px] transition-colors touch-manipulation min-h-[48px] ${
-              activeTab === 'submit'
-                ? 'text-indigo-600 bg-indigo-50/80 font-bold'
-                : 'text-slate-500 hover:text-slate-800 font-medium'
+            className={`min-h-[48px] flex flex-col items-center justify-center rounded-lg transition-colors ${
+              activeTab === 'submit' ? 'text-indigo-600 font-semibold' : 'text-slate-500'
             }`}
           >
-            <PenTool className="w-4 h-4 mb-0.5" />
-            <span className="truncate">Submit</span>
+            <PenLine className="w-4 h-4" />
+            <span className="text-[10px] mt-0.5 whitespace-nowrap">Feedback</span>
           </button>
 
           <button
-            id="mobile-nav-track"
             type="button"
             onClick={() => onSelectTab('track')}
-            className={`flex flex-col items-center justify-center py-1.5 px-1 rounded-xl text-[11px] transition-colors touch-manipulation min-h-[48px] ${
-              activeTab === 'track'
-                ? 'text-indigo-600 bg-indigo-50/80 font-bold'
-                : 'text-slate-500 hover:text-slate-800 font-medium'
+            className={`min-h-[48px] flex flex-col items-center justify-center rounded-lg transition-colors ${
+              activeTab === 'track' ? 'text-indigo-600 font-semibold' : 'text-slate-500'
             }`}
           >
-            <Clock className="w-4 h-4 mb-0.5" />
-            <span className="truncate">Track</span>
+            <Search className="w-4 h-4" />
+            <span className="text-[10px] mt-0.5 whitespace-nowrap">Track</span>
           </button>
 
           <button
-            id="mobile-nav-admin"
             type="button"
             onClick={() => {
               onSelectTab('admin_resolver');
-              onToggleRole('admin');
+              if (userRole !== 'admin') onToggleRole('admin');
             }}
-            className={`relative flex flex-col items-center justify-center py-1.5 px-1 rounded-xl text-[11px] transition-colors touch-manipulation min-h-[48px] ${
-              activeTab === 'admin_resolver'
-                ? 'text-indigo-600 bg-indigo-50/80 font-bold'
-                : 'text-slate-500 hover:text-slate-800 font-medium'
+            className={`min-h-[48px] flex flex-col items-center justify-center rounded-lg transition-colors ${
+              activeTab === 'admin_resolver' ? 'text-indigo-600 font-semibold' : 'text-slate-500'
             }`}
           >
-            <ShieldAlert className="w-4 h-4 mb-0.5" />
-            <span className="truncate">Resolve</span>
-            {pendingAdminCount > 0 && (
-              <span className="absolute top-1 right-2 w-3.5 h-3.5 text-[9px] font-bold bg-rose-600 text-white rounded-full flex items-center justify-center">
-                {pendingAdminCount}
-              </span>
-            )}
+            <ShieldCheck className="w-4 h-4" />
+            <span className="text-[10px] mt-0.5 whitespace-nowrap">Resolver</span>
           </button>
 
           <button
-            id="mobile-nav-feedback-list"
-            type="button"
-            onClick={() => onSelectTab('feedback_list')}
-            className={`flex flex-col items-center justify-center py-1.5 px-1 rounded-xl text-[11px] transition-colors touch-manipulation min-h-[48px] ${
-              activeTab === 'feedback_list'
-                ? 'text-indigo-600 bg-indigo-50/80 font-bold'
-                : 'text-slate-500 hover:text-slate-800 font-medium'
-            }`}
-          >
-            <MessageSquareText className="w-4 h-4 mb-0.5" />
-            <span className="truncate">Submissions</span>
-          </button>
-
-          <button
-            id="mobile-nav-analytics"
             type="button"
             onClick={() => onSelectTab('analytics')}
-            className={`flex flex-col items-center justify-center py-1.5 px-1 rounded-xl text-[11px] transition-colors touch-manipulation min-h-[48px] ${
-              activeTab === 'analytics'
-                ? 'text-indigo-600 bg-indigo-50/80 font-bold'
-                : 'text-slate-500 hover:text-slate-800 font-medium'
+            className={`min-h-[48px] flex flex-col items-center justify-center rounded-lg transition-colors ${
+              activeTab === 'analytics' ? 'text-indigo-600 font-semibold' : 'text-slate-500'
             }`}
           >
-            <BarChart3 className="w-4 h-4 mb-0.5" />
-            <span className="truncate">Analytics</span>
+            <BarChart3 className="w-4 h-4" />
+            <span className="text-[10px] mt-0.5 whitespace-nowrap">Analytics</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => onSelectTab('courses')}
+            className={`min-h-[48px] flex flex-col items-center justify-center rounded-lg transition-colors ${
+              activeTab === 'courses' ? 'text-indigo-600 font-semibold' : 'text-slate-500'
+            }`}
+          >
+            <BookOpen className="w-4 h-4" />
+            <span className="text-[10px] mt-0.5 whitespace-nowrap">Curriculum</span>
           </button>
 
         </div>

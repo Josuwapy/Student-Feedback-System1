@@ -81,7 +81,7 @@ export const AdminResolverView: React.FC<AdminResolverViewProps> = ({
 
     const adminResponseData = modalActionTaken.trim() ? {
       actionTaken: modalActionTaken.trim(),
-      resolvedBy: modalAssignedTo.trim() || 'TCC Administration',
+      resolvedBy: modalAssignedTo.trim() || 'TCC Institutional Quality Desk',
       officialNotes: modalOfficialNotes.trim()
     } : undefined;
 
@@ -97,7 +97,7 @@ export const AdminResolverView: React.FC<AdminResolverViewProps> = ({
     setResolvingTicket(null);
   };
 
-  // Metrics calculation
+  // Metrics calculation with tabular numerals
   const metrics = useMemo(() => {
     const total = feedbacks.length;
     const resolved = feedbacks.filter(f => f.status === 'resolved' || f.status === 'addressed').length;
@@ -219,254 +219,128 @@ export const AdminResolverView: React.FC<AdminResolverViewProps> = ({
     document.body.removeChild(link);
   };
 
-  const getPriorityBadge = (priority?: TicketPriority) => {
-    switch (priority) {
-      case 'urgent':
-        return (
-          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-bold bg-rose-100 text-rose-800 border border-rose-200 animate-pulse">
-            <AlertTriangle className="w-3 h-3" />
-            Urgent
-          </span>
-        );
-      case 'high':
-        return (
-          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold bg-amber-100 text-amber-800 border border-amber-200">
-            High
-          </span>
-        );
-      case 'medium':
-        return (
-          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-blue-50 text-blue-700 border border-blue-200">
-            Medium
-          </span>
-        );
-      default:
-        return (
-          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-700 border border-slate-200">
-            Low
-          </span>
-        );
-    }
-  };
-
-  const getStatusBadge = (status?: TicketStatus) => {
-    switch (status) {
-      case 'resolved':
-      case 'addressed':
-        return (
-          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">
-            <CheckCircle2 className="w-3.5 h-3.5" />
-            Resolved
-          </span>
-        );
-      case 'in_progress':
-      case 'investigating':
-      case 'reviewed':
-        return (
-          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-indigo-100 text-indigo-800 border border-indigo-200">
-            <Clock className="w-3.5 h-3.5" />
-            In Progress
-          </span>
-        );
-      case 'closed':
-        return (
-          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-slate-200 text-slate-700">
-            Closed
-          </span>
-        );
-      default:
-        return (
-          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-amber-100 text-amber-800 border border-amber-300">
-            <AlertCircle className="w-3.5 h-3.5" />
-            Pending Review
-          </span>
-        );
-    }
-  };
-
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
       
-      {/* Header Banner */}
-      <div className="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white rounded-2xl p-6 shadow-sm border border-slate-800 flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-          <div className="flex items-center gap-2 mb-1">
-            <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-indigo-500/30 text-indigo-300 border border-indigo-500/40">
-              Administrator Operations Center
-            </span>
-            <span className="text-slate-400 text-xs">• Issue Resolution Desk</span>
+      {/* Editorial Header */}
+      <div className="border-b border-slate-200/90 pb-6 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+        <div className="space-y-1.5">
+          <div className="flex items-center gap-2 text-xs font-semibold text-slate-500 uppercase tracking-wider">
+            <span>Torres Capitol College</span>
+            <span aria-hidden="true">·</span>
+            <span>Administrative Governance & Triage</span>
           </div>
-          <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-white">
-            Student Feedback & Concern Monitoring
-          </h2>
-          <p className="text-xs sm:text-sm text-slate-300 mt-1 max-w-2xl">
-            Triage, assign responsible campus departments, track action timelines, and log official institutional resolutions to student complaints and recommendations.
+          <h1 className="font-display text-2xl sm:text-3xl font-semibold text-slate-900 tracking-tight">
+            Institutional Resolution Desk
+          </h1>
+          <p className="text-xs sm:text-sm text-slate-600 max-w-2xl leading-relaxed">
+            Administrative queue for assigning department leads, conducting facility audits, updating resolution milestones, and issuing official closures.
           </p>
         </div>
 
-        <div className="flex items-center gap-2 shrink-0">
-          <button
-            id="btn-export-admin-csv"
-            type="button"
-            onClick={handleExportCSV}
-            className="flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold bg-white/10 hover:bg-white/20 text-white border border-white/20 transition-all shadow-xs min-h-[40px]"
-          >
-            <Download className="w-4 h-4" />
-            <span>Export CSV Audit Log</span>
-          </button>
+        <button
+          type="button"
+          onClick={handleExportCSV}
+          className="px-4 py-2.5 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-800 font-medium text-xs inline-flex items-center gap-1.5 transition-colors shadow-2xs cursor-pointer self-start sm:self-auto"
+        >
+          <Download className="w-3.5 h-3.5 text-slate-500" />
+          <span>Export Audit Log (CSV)</span>
+        </button>
+      </div>
+
+      {/* SLA & Metric Overview Bar with Tabular Figures */}
+      <div className="grid grid-cols-2 lg:grid-cols-5 gap-3">
+        <div className="bg-white p-4 rounded-xl border border-slate-200/90 shadow-2xs space-y-1">
+          <span className="text-xs text-slate-500">Total in Registry</span>
+          <div className="text-2xl font-bold font-mono-numbers text-slate-900">
+            {metrics.total}
+          </div>
+          <span className="text-[11px] text-slate-400">All submissions logged</span>
+        </div>
+
+        <div className="bg-white p-4 rounded-xl border border-slate-200/90 shadow-2xs space-y-1">
+          <span className="text-xs text-slate-500">Pending Triage</span>
+          <div className="text-2xl font-bold font-mono-numbers text-amber-700">
+            {metrics.pending}
+          </div>
+          <span className="text-[11px] text-slate-400">Awaiting assignment</span>
+        </div>
+
+        <div className="bg-white p-4 rounded-xl border border-slate-200/90 shadow-2xs space-y-1">
+          <span className="text-xs text-slate-500">In Active Remediation</span>
+          <div className="text-2xl font-bold font-mono-numbers text-indigo-700">
+            {metrics.inProgress}
+          </div>
+          <span className="text-[11px] text-slate-400">Investigation underway</span>
+        </div>
+
+        <div className="bg-white p-4 rounded-xl border border-slate-200/90 shadow-2xs space-y-1">
+          <span className="text-xs text-slate-500">Urgent Backlog</span>
+          <div className="text-2xl font-bold font-mono-numbers text-rose-700">
+            {metrics.urgent}
+          </div>
+          <span className="text-[11px] text-slate-400">&lt; 24h SLA response</span>
+        </div>
+
+        <div className="col-span-2 lg:col-span-1 bg-white p-4 rounded-xl border border-slate-200/90 shadow-2xs space-y-1">
+          <span className="text-xs text-slate-500">Resolution Rate</span>
+          <div className="text-2xl font-bold font-mono-numbers text-emerald-700">
+            {metrics.resolutionRate}%
+          </div>
+          <span className="text-[11px] text-slate-400 font-mono-numbers">{metrics.resolved} of {metrics.total} resolved</span>
         </div>
       </div>
 
-      {/* KPI Cards */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
-        <div className="bg-white p-4 rounded-xl border border-slate-200/80 shadow-xs">
-          <div className="text-slate-500 text-xs font-medium">Total Tickets</div>
-          <div className="text-2xl font-bold text-slate-900 mt-1">{metrics.total}</div>
-          <div className="text-[11px] text-slate-400 mt-0.5">Across all pillars</div>
-        </div>
-
-        <div className="bg-white p-4 rounded-xl border border-amber-200/80 bg-amber-50/20 shadow-xs">
-          <div className="text-amber-700 text-xs font-medium flex items-center gap-1">
-            <AlertCircle className="w-3.5 h-3.5" />
-            Pending Action
-          </div>
-          <div className="text-2xl font-bold text-amber-700 mt-1">{metrics.pending}</div>
-          <div className="text-[11px] text-amber-600/80 mt-0.5">Awaiting triage</div>
-        </div>
-
-        <div className="bg-white p-4 rounded-xl border border-indigo-200/80 bg-indigo-50/20 shadow-xs">
-          <div className="text-indigo-700 text-xs font-medium flex items-center gap-1">
-            <Clock className="w-3.5 h-3.5" />
-            In Progress
-          </div>
-          <div className="text-2xl font-bold text-indigo-700 mt-1">{metrics.inProgress}</div>
-          <div className="text-[11px] text-indigo-600/80 mt-0.5">Action ongoing</div>
-        </div>
-
-        <div className="bg-white p-4 rounded-xl border border-emerald-200/80 bg-emerald-50/20 shadow-xs">
-          <div className="text-emerald-700 text-xs font-medium flex items-center gap-1">
-            <CheckCircle2 className="w-3.5 h-3.5" />
-            Resolved
-          </div>
-          <div className="text-2xl font-bold text-emerald-700 mt-1">{metrics.resolved}</div>
-          <div className="text-[11px] text-emerald-600/80 mt-0.5">Official action logged</div>
-        </div>
-
-        <div className="bg-white p-4 rounded-xl border border-rose-200/80 bg-rose-50/20 shadow-xs">
-          <div className="text-rose-700 text-xs font-medium flex items-center gap-1">
-            <AlertTriangle className="w-3.5 h-3.5" />
-            Urgent Attention
-          </div>
-          <div className="text-2xl font-bold text-rose-700 mt-1">{metrics.urgent}</div>
-          <div className="text-[11px] text-rose-600/80 mt-0.5">High SLA priority</div>
-        </div>
-
-        <div className="bg-white p-4 rounded-xl border border-slate-200/80 shadow-xs">
-          <div className="text-slate-500 text-xs font-medium">Resolution Rate</div>
-          <div className="text-2xl font-bold text-slate-900 mt-1">{metrics.resolutionRate}%</div>
-          <div className="text-[11px] text-emerald-600 font-medium mt-0.5">SLA target: &gt;80%</div>
-        </div>
-      </div>
-
-      {/* Filter and Search Bar */}
-      <div className="bg-white rounded-2xl border border-slate-200/80 p-4 shadow-xs space-y-3">
+      {/* Filter & Search Bar */}
+      <div className="bg-white rounded-2xl border border-slate-200/90 p-4 shadow-2xs space-y-4">
         
-        {/* Quick Tab Filters */}
-        <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-3">
-          <div className="flex items-center gap-1.5 overflow-x-auto py-1">
-            <button
-              id="admin-tab-all"
-              type="button"
-              onClick={() => setActiveTabFilter('all')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
-                activeTabFilter === 'all'
-                  ? 'bg-slate-900 text-white'
-                  : 'text-slate-600 hover:bg-slate-100'
-              }`}
-            >
-              All Submissions ({feedbacks.length})
-            </button>
-            <button
-              id="admin-tab-unresolved"
-              type="button"
-              onClick={() => setActiveTabFilter('unresolved')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
-                activeTabFilter === 'unresolved'
-                  ? 'bg-amber-600 text-white'
-                  : 'text-slate-600 hover:bg-slate-100'
-              }`}
-            >
-              Needs Attention ({metrics.pending + metrics.inProgress})
-            </button>
-            <button
-              id="admin-tab-urgent"
-              type="button"
-              onClick={() => setActiveTabFilter('urgent')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
-                activeTabFilter === 'urgent'
-                  ? 'bg-rose-600 text-white'
-                  : 'text-slate-600 hover:bg-slate-100'
-              }`}
-            >
-              Urgent Issues ({metrics.urgent})
-            </button>
-            <button
-              id="admin-tab-resolved"
-              type="button"
-              onClick={() => setActiveTabFilter('resolved')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
-                activeTabFilter === 'resolved'
-                  ? 'bg-emerald-600 text-white'
-                  : 'text-slate-600 hover:bg-slate-100'
-              }`}
-            >
-              Resolved ({metrics.resolved})
-            </button>
+        {/* Segmented Filter Buttons */}
+        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 pb-3">
+          <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-lg border border-slate-200/70 text-xs">
+            {[
+              { id: 'all', label: 'All Queue' },
+              { id: 'unresolved', label: 'Unresolved' },
+              { id: 'urgent', label: 'Urgent Backlog' },
+              { id: 'resolved', label: 'Resolved Closed' }
+            ].map(tab => (
+              <button
+                key={tab.id}
+                type="button"
+                onClick={() => setActiveTabFilter(tab.id as any)}
+                className={`px-3 py-1.5 rounded-md font-medium transition-colors cursor-pointer ${
+                  activeTabFilter === tab.id
+                    ? 'bg-white text-slate-900 shadow-2xs font-semibold'
+                    : 'text-slate-600 hover:text-slate-900'
+                }`}
+              >
+                {tab.label}
+              </button>
+            ))}
           </div>
 
-          <span className="text-xs text-slate-500 font-medium">
-            Showing <strong className="text-slate-900">{filteredTickets.length}</strong> matching tickets
+          <span className="text-xs text-slate-500 font-mono-numbers">
+            Showing {filteredTickets.length} of {feedbacks.length} records
           </span>
         </div>
 
-        {/* Dropdown Filters & Search */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2.5">
-          {/* Search box */}
-          <div className="relative lg:col-span-2">
+        {/* Dropdowns & Search */}
+        <div className="grid grid-cols-1 sm:grid-cols-4 gap-2.5">
+          <div className="relative sm:col-span-2">
             <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
             <input
-              id="input-admin-search"
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search ticket #, keyword, student, room..."
-              className="w-full text-xs pl-9 pr-3 py-2 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:outline-none min-h-[38px]"
+              placeholder="Search by ticket #, department, keyword, or student..."
+              className="w-full text-xs pl-9 pr-3 py-2 rounded-lg border border-slate-200 bg-white text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-slate-900"
             />
           </div>
 
-          {/* Category */}
           <div>
             <select
-              id="select-admin-category"
-              value={selectedCategory}
-              onChange={(e) => setSelectedCategory(e.target.value)}
-              className="w-full text-xs px-2.5 py-2 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:outline-none min-h-[38px]"
-            >
-              <option value="all">All Categories</option>
-              <option value="services">School Services</option>
-              <option value="facilities">Campus Facilities</option>
-              <option value="activities">Student Activities</option>
-              <option value="academics">Academics & Courses</option>
-            </select>
-          </div>
-
-          {/* Department */}
-          <div>
-            <select
-              id="select-admin-department"
               value={selectedDepartment}
               onChange={(e) => setSelectedDepartment(e.target.value)}
-              className="w-full text-xs px-2.5 py-2 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:outline-none min-h-[38px] truncate"
+              className="w-full text-xs py-2 px-2.5 rounded-lg border border-slate-200 bg-white text-slate-900 focus:outline-none focus:ring-1 focus:ring-slate-900"
             >
               <option value="all">All Departments</option>
               {CAMPUS_DEPARTMENTS.map(d => (
@@ -475,328 +349,241 @@ export const AdminResolverView: React.FC<AdminResolverViewProps> = ({
             </select>
           </div>
 
-          {/* Status */}
           <div>
             <select
-              id="select-admin-status"
               value={selectedStatus}
               onChange={(e) => setSelectedStatus(e.target.value)}
-              className="w-full text-xs px-2.5 py-2 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:outline-none min-h-[38px]"
+              className="w-full text-xs py-2 px-2.5 rounded-lg border border-slate-200 bg-white text-slate-900 focus:outline-none focus:ring-1 focus:ring-slate-900"
             >
               <option value="all">All Statuses</option>
-              <option value="pending">Pending Review</option>
+              <option value="pending">Pending</option>
+              <option value="investigating">Investigating</option>
               <option value="in_progress">In Progress</option>
               <option value="resolved">Resolved</option>
-              <option value="closed">Closed</option>
             </select>
           </div>
         </div>
+
       </div>
 
-      {/* Tickets List */}
-      <div className="space-y-3">
-        {filteredTickets.length === 0 ? (
-          <div className="bg-white rounded-2xl border border-slate-200 p-12 text-center">
-            <div className="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center text-slate-400 mx-auto mb-3">
-              <CheckCircle2 className="w-6 h-6" />
-            </div>
-            <h3 className="text-sm font-semibold text-slate-900">No matching tickets found</h3>
-            <p className="text-xs text-slate-500 mt-1 max-w-sm mx-auto">
-              Try adjusting your search query, status, or category filter to inspect other student submissions.
-            </p>
-          </div>
-        ) : (
-          filteredTickets.map((ticket) => {
-            const ticketNo = ticket.ticketNumber || ticket.id;
-            const categoryLabel = ticket.category 
-              ? (ticket.category.charAt(0).toUpperCase() + ticket.category.slice(1))
-              : 'Academics';
-            const isResolved = ticket.status === 'resolved' || ticket.status === 'addressed';
-
-            return (
-              <div
-                key={ticket.id}
-                id={`admin-ticket-card-${ticket.id}`}
-                className="bg-white rounded-2xl border border-slate-200/90 hover:border-indigo-300 transition-all shadow-xs p-5 space-y-4"
-              >
-                {/* Card Top Row: Identifiers & Badges */}
-                <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-3">
-                  <div className="flex flex-wrap items-center gap-2">
-                    <span className="font-mono text-xs font-bold text-indigo-700 bg-indigo-50 px-2.5 py-1 rounded-md border border-indigo-200">
-                      {ticketNo}
-                    </span>
-                    <span className="text-xs font-semibold text-slate-700 bg-slate-100 px-2.5 py-1 rounded-md">
-                      {categoryLabel}
-                    </span>
-                    {getPriorityBadge(ticket.priority)}
-                    {getStatusBadge(ticket.status)}
-                  </div>
-
-                  <div className="flex items-center gap-3 text-xs text-slate-500">
-                    <span className="flex items-center gap-1">
-                      <Calendar className="w-3.5 h-3.5 text-slate-400" />
-                      {new Date(ticket.timestamp).toLocaleDateString(undefined, {
-                        month: 'short',
-                        day: 'numeric',
-                        year: 'numeric'
-                      })}
-                    </span>
-                    <span>•</span>
-                    <span>{ticket.isAnonymous ? 'Anonymous Student' : (ticket.studentName || 'Student')}</span>
-                  </div>
-                </div>
-
-                {/* Title and Details */}
-                <div className="space-y-2">
-                  <h3 className="text-sm sm:text-base font-bold text-slate-900">
-                    {ticket.title || ticket.strengths.slice(0, 60)}
-                  </h3>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
-                    <div className="flex items-center gap-1.5 text-slate-600 bg-slate-50 px-3 py-1.5 rounded-lg border border-slate-100">
-                      <Building2 className="w-4 h-4 text-slate-400 shrink-0" />
-                      <span className="truncate">
-                        <strong>Dept:</strong> {ticket.department || 'Office of Academic Affairs'}
+      {/* Tickets Table / List */}
+      <div className="bg-white rounded-2xl border border-slate-200/90 shadow-2xs overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="w-full text-left text-xs border-collapse">
+            <thead>
+              <tr className="bg-slate-50/80 border-b border-slate-200 text-slate-600 font-semibold">
+                <th className="py-3 px-4">Ticket</th>
+                <th className="py-3 px-4">Date</th>
+                <th className="py-3 px-4">Subject & Department</th>
+                <th className="py-3 px-4">Priority</th>
+                <th className="py-3 px-4">Status</th>
+                <th className="py-3 px-4">Assigned Lead</th>
+                <th className="py-3 px-4 text-right">Action</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-100">
+              {filteredTickets.length > 0 ? (
+                filteredTickets.map((ticket) => (
+                  <tr key={ticket.id} className="hover:bg-slate-50/80 transition-colors">
+                    <td className="py-3 px-4 whitespace-nowrap">
+                      <span className="font-mono-numbers font-semibold text-slate-900">
+                        {ticket.ticketNumber || ticket.id}
                       </span>
-                    </div>
+                    </td>
 
-                    <div className="flex items-center gap-1.5 text-slate-600 bg-slate-50 px-3 py-1.5 rounded-lg border border-slate-100">
-                      <MapPin className="w-4 h-4 text-slate-400 shrink-0" />
-                      <span className="truncate">
-                        <strong>Target:</strong> {ticket.targetEntity || ticket.location || ticket.courseId || 'Campus-wide'}
+                    <td className="py-3 px-4 whitespace-nowrap text-slate-500 font-mono-numbers">
+                      {new Date(ticket.timestamp).toLocaleDateString()}
+                    </td>
+
+                    <td className="py-3 px-4 max-w-xs">
+                      <div className="font-semibold text-slate-900 line-clamp-1">
+                        {ticket.title || ticket.strengths}
+                      </div>
+                      <div className="text-[11px] text-slate-500 line-clamp-1 mt-0.5">
+                        {ticket.department || 'Academic Affairs'}
+                      </div>
+                    </td>
+
+                    <td className="py-3 px-4 whitespace-nowrap">
+                      <span className={`capitalize font-medium ${
+                        ticket.priority === 'urgent' ? 'text-rose-700 font-bold' :
+                        ticket.priority === 'high' ? 'text-amber-700 font-semibold' :
+                        'text-slate-700'
+                      }`}>
+                        {ticket.priority || 'medium'}
                       </span>
-                    </div>
-                  </div>
+                    </td>
 
-                  {/* Concern / Improvement Text */}
-                  <div className="bg-slate-50/70 p-3 rounded-xl border border-slate-200/60 text-xs text-slate-700 space-y-1">
-                    <div className="font-semibold text-slate-900 flex items-center gap-1.5">
-                      <span>Reported Concern / Recommendation:</span>
-                    </div>
-                    <p className="leading-relaxed">
-                      {ticket.areasForImprovement || ticket.strengths}
-                    </p>
-                    {ticket.additionalComments && (
-                      <p className="text-slate-500 italic mt-1 pt-1 border-t border-slate-200/50">
-                        "{ticket.additionalComments}"
-                      </p>
-                    )}
-                  </div>
-                </div>
-
-                {/* Official Resolution Display if exists */}
-                {ticket.adminResponse && (
-                  <div className="bg-emerald-50/70 p-3.5 rounded-xl border border-emerald-200 text-xs space-y-1">
-                    <div className="flex items-center justify-between font-bold text-emerald-900">
-                      <span className="flex items-center gap-1.5">
-                        <FileCheck2 className="w-4 h-4 text-emerald-600" />
-                        Official Administrative Resolution:
+                    <td className="py-3 px-4 whitespace-nowrap">
+                      <span className={`capitalize font-medium ${
+                        ticket.status === 'resolved' || ticket.status === 'addressed' ? 'text-emerald-700 font-semibold' :
+                        ticket.status === 'in_progress' || ticket.status === 'investigating' ? 'text-amber-700 font-semibold' :
+                        'text-slate-700'
+                      }`}>
+                        {ticket.status.replace('_', ' ')}
                       </span>
-                      <span className="text-[11px] font-medium text-emerald-700">
-                        Resolved by {ticket.adminResponse.resolvedBy}
-                      </span>
-                    </div>
-                    <p className="text-emerald-950 font-medium leading-relaxed">
-                      {ticket.adminResponse.actionTaken}
-                    </p>
-                    {ticket.adminResponse.officialNotes && (
-                      <p className="text-emerald-800 text-[11px] mt-1 pt-1 border-t border-emerald-200/60">
-                        <strong>Note:</strong> {ticket.adminResponse.officialNotes}
-                      </p>
-                    )}
-                  </div>
-                )}
+                    </td>
 
-                {/* Footer Controls: Assignee & Action Buttons */}
-                <div className="flex flex-wrap items-center justify-between gap-3 pt-2">
-                  <div className="text-xs text-slate-500 flex items-center gap-1.5">
-                    <UserCheck className="w-4 h-4 text-slate-400" />
-                    <span>
-                      Assigned: <strong>{ticket.assignedTo || 'Unassigned (General Pool)'}</strong>
-                    </span>
-                  </div>
+                    <td className="py-3 px-4 whitespace-nowrap text-slate-600">
+                      {ticket.assignedTo || ticket.adminResponse?.resolvedBy || (
+                        <span className="text-slate-400 italic">Unassigned</span>
+                      )}
+                    </td>
 
-                  <div className="flex items-center gap-2">
-                    <button
-                      id={`btn-manage-ticket-${ticket.id}`}
-                      type="button"
-                      onClick={() => handleOpenResolverModal(ticket)}
-                      className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-indigo-600 hover:bg-indigo-700 text-white transition-all shadow-xs min-h-[36px]"
-                    >
-                      <SlidersHorizontal className="w-3.5 h-3.5" />
-                      <span>{isResolved ? 'Review / Edit Resolution' : 'Resolve & Update Ticket'}</span>
-                    </button>
-                  </div>
-                </div>
-              </div>
-            );
-          })
-        )}
+                    <td className="py-3 px-4 whitespace-nowrap text-right">
+                      <button
+                        type="button"
+                        onClick={() => handleOpenResolverModal(ticket)}
+                        className="px-3 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-white font-medium text-xs transition-colors cursor-pointer shadow-2xs"
+                      >
+                        Triage & Resolve
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan={7} className="py-8 text-center text-slate-500">
+                    No tickets match the selected filters.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
 
-      {/* Resolution & Triage Modal */}
+      {/* Resolver / Triage Modal */}
       {resolvingTicket && (
-        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 animate-in fade-in duration-150">
-          <div className="bg-white w-full max-w-2xl rounded-2xl shadow-xl border border-slate-200 overflow-hidden flex flex-col max-h-[90vh]">
+        <div className="fixed inset-0 z-50 bg-slate-950/40 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto">
+          <div className="bg-white rounded-2xl border border-slate-200/90 shadow-xl max-w-2xl w-full p-6 space-y-6 animate-in fade-in duration-150">
             
-            {/* Modal Header */}
-            <div className="px-6 py-4 bg-slate-900 text-white flex items-center justify-between">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
               <div>
-                <div className="flex items-center gap-2">
-                  <span className="font-mono text-xs px-2 py-0.5 rounded bg-indigo-500/30 text-indigo-300 font-bold">
-                    {resolvingTicket.ticketNumber || resolvingTicket.id}
-                  </span>
-                  <span className="text-xs text-slate-400">Resolution Desk</span>
-                </div>
-                <h3 className="text-base font-bold text-white mt-1 line-clamp-1">
-                  {resolvingTicket.title || resolvingTicket.strengths.slice(0, 50)}
+                <span className="text-xs font-mono-numbers text-indigo-600 font-semibold uppercase tracking-wider">
+                  Triage Protocol · {resolvingTicket.ticketNumber || resolvingTicket.id}
+                </span>
+                <h3 className="font-display text-lg font-semibold text-slate-900 mt-0.5">
+                  Update Investigation & Official Resolution
                 </h3>
               </div>
               <button
                 type="button"
                 onClick={() => setResolvingTicket(null)}
-                className="text-slate-400 hover:text-white p-1 rounded-lg transition-colors"
+                className="text-slate-400 hover:text-slate-600 text-sm p-1 rounded-lg hover:bg-slate-100 cursor-pointer"
               >
-                <X className="w-5 h-5" />
+                ✕
               </button>
             </div>
 
-            {/* Modal Body */}
-            <form onSubmit={handleSaveResolution} className="p-6 space-y-4 overflow-y-auto flex-1">
-              
-              {/* Ticket Quick Context */}
-              <div className="bg-slate-50 p-3 rounded-xl border border-slate-200 text-xs space-y-1">
-                <div className="text-slate-500">Student Submission:</div>
-                <p className="text-slate-800 font-medium">
-                  {resolvingTicket.areasForImprovement || resolvingTicket.strengths}
-                </p>
-                <div className="text-[11px] text-slate-400 pt-1 flex items-center justify-between">
-                  <span>Target: {resolvingTicket.targetEntity || resolvingTicket.location || 'General Campus'}</span>
-                  <span>Submitted: {new Date(resolvingTicket.timestamp).toLocaleString()}</span>
-                </div>
+            {/* Ticket Snapshot */}
+            <div className="bg-slate-50 rounded-xl p-3.5 border border-slate-200/70 text-xs space-y-1">
+              <div className="font-semibold text-slate-900">
+                {resolvingTicket.title || resolvingTicket.strengths}
               </div>
+              <p className="text-slate-600 line-clamp-2">
+                {resolvingTicket.areasForImprovement || resolvingTicket.strengths}
+              </p>
+              <div className="flex items-center gap-3 text-slate-500 pt-1">
+                <span>Dept: <strong>{resolvingTicket.department}</strong></span>
+                <span aria-hidden="true">·</span>
+                <span>Submitted by: <strong>{resolvingTicket.isAnonymous ? 'Protected Anonymous' : resolvingTicket.studentName}</strong></span>
+              </div>
+            </div>
 
-              {/* Status and Priority Row */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <form onSubmit={handleSaveResolution} className="space-y-4 text-xs">
+              
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">
-                    Update Resolution Status *
+                  <label className="block font-semibold text-slate-800 mb-1">
+                    Status State
                   </label>
                   <select
-                    id="modal-select-status"
                     value={modalStatus}
                     onChange={(e) => setModalStatus(e.target.value as TicketStatus)}
-                    className="w-full text-xs px-3 py-2 rounded-xl border border-slate-200 bg-white focus:ring-2 focus:ring-indigo-500 focus:outline-none min-h-[40px]"
+                    className="w-full py-2 px-2.5 rounded-lg border border-slate-200 bg-white text-slate-900 focus:outline-none focus:ring-1 focus:ring-slate-900"
                   >
-                    <option value="pending">Pending Review</option>
-                    <option value="investigating">Under Investigation</option>
-                    <option value="in_progress">In Progress / Action Ongoing</option>
-                    <option value="resolved">Resolved / Action Taken</option>
-                    <option value="closed">Closed / Archived</option>
+                    <option value="pending">Pending</option>
+                    <option value="investigating">Investigating</option>
+                    <option value="in_progress">In Progress</option>
+                    <option value="resolved">Resolved</option>
                   </select>
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">
-                    Priority Level *
+                  <label className="block font-semibold text-slate-800 mb-1">
+                    Priority Level
                   </label>
                   <select
-                    id="modal-select-priority"
                     value={modalPriority}
                     onChange={(e) => setModalPriority(e.target.value as TicketPriority)}
-                    className="w-full text-xs px-3 py-2 rounded-xl border border-slate-200 bg-white focus:ring-2 focus:ring-indigo-500 focus:outline-none min-h-[40px]"
+                    className="w-full py-2 px-2.5 rounded-lg border border-slate-200 bg-white text-slate-900 focus:outline-none focus:ring-1 focus:ring-slate-900"
                   >
-                    <option value="low">Low (Routine)</option>
-                    <option value="medium">Medium (Standard)</option>
-                    <option value="high">High (Urgent Attention)</option>
-                    <option value="urgent">Urgent (Immediate Safety/Outage)</option>
-                  </select>
-                </div>
-              </div>
-
-              {/* Department and Assignee */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">
-                    Assigned Campus Department
-                  </label>
-                  <select
-                    id="modal-select-department"
-                    value={modalDepartment}
-                    onChange={(e) => setModalDepartment(e.target.value)}
-                    className="w-full text-xs px-3 py-2 rounded-xl border border-slate-200 bg-white focus:ring-2 focus:ring-indigo-500 focus:outline-none min-h-[40px]"
-                  >
-                    {CAMPUS_DEPARTMENTS.map(d => (
-                      <option key={d.id} value={d.name}>{d.name}</option>
-                    ))}
+                    <option value="low">Low</option>
+                    <option value="medium">Medium</option>
+                    <option value="high">High</option>
+                    <option value="urgent">Urgent</option>
                   </select>
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">
-                    Officer / Person In Charge
+                  <label className="block font-semibold text-slate-800 mb-1">
+                    Assign Lead Officer
                   </label>
                   <input
-                    id="modal-input-assigned"
                     type="text"
                     value={modalAssignedTo}
                     onChange={(e) => setModalAssignedTo(e.target.value)}
-                    placeholder="e.g., Engr. David Bautista (IT Network)"
-                    className="w-full text-xs px-3 py-2 rounded-xl border border-slate-200 bg-white focus:ring-2 focus:ring-indigo-500 focus:outline-none min-h-[40px]"
+                    placeholder="e.g. Engr. Jayson Baluyos"
+                    className="w-full py-2 px-2.5 rounded-lg border border-slate-200 bg-white text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-slate-900"
                   />
                 </div>
               </div>
 
-              {/* Action Taken (Visible to student) */}
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1 flex items-center justify-between">
-                  <span>Official Action Taken / Resolution Summary</span>
-                  <span className="text-[11px] font-normal text-indigo-600">Visible to student in Ticket Tracker</span>
+                <label className="block font-semibold text-slate-800 mb-1">
+                  Remediation Action Taken (Institutional Record)
                 </label>
-                <textarea
-                  id="modal-textarea-action"
-                  rows={3}
+                <input
+                  type="text"
                   value={modalActionTaken}
                   onChange={(e) => setModalActionTaken(e.target.value)}
-                  placeholder="Describe concrete steps taken to investigate or resolve this issue (e.g., 'Replaced AP-302 hardware, verified 100 Mbps signal across floor 3')..."
-                  className="w-full text-xs p-3 rounded-xl border border-slate-200 bg-white focus:ring-2 focus:ring-indigo-500 focus:outline-none resize-y"
+                  placeholder="e.g. Replaced capacitor on Aircon Unit Rm 204; scheduled weekly preventive check"
+                  className="w-full py-2 px-2.5 rounded-lg border border-slate-200 bg-white text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-slate-900"
                 />
               </div>
 
-              {/* Internal / Administrative Notes */}
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">
-                  Internal Administrative / Maintenance Notes
+                <label className="block font-semibold text-slate-800 mb-1">
+                  Official Closure Notes & Remarks (Visible to Student)
                 </label>
                 <textarea
-                  id="modal-textarea-notes"
-                  rows={2}
+                  rows={3}
                   value={modalOfficialNotes}
                   onChange={(e) => setModalOfficialNotes(e.target.value)}
-                  placeholder="Work order IDs, vendor contact info, scheduled preventative dates..."
-                  className="w-full text-xs p-3 rounded-xl border border-slate-200 bg-white focus:ring-2 focus:ring-indigo-500 focus:outline-none resize-y"
+                  placeholder="Explain findings, follow-up schedule, or university policy adjustments made..."
+                  className="w-full py-2 px-2.5 rounded-lg border border-slate-200 bg-white text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-slate-900 resize-none"
                 />
               </div>
 
-              {/* Action Footer */}
-              <div className="pt-3 border-t border-slate-100 flex items-center justify-end gap-2">
+              <div className="flex items-center justify-end gap-2.5 pt-3 border-t border-slate-100">
                 <button
                   type="button"
                   onClick={() => setResolvingTicket(null)}
-                  className="px-4 py-2 rounded-xl text-xs font-medium text-slate-600 hover:bg-slate-100 transition-colors"
+                  className="px-4 py-2 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 font-medium cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
-                  id="btn-save-resolution"
                   type="submit"
-                  className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold bg-indigo-600 hover:bg-indigo-700 text-white transition-all shadow-xs"
+                  className="px-5 py-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-white font-semibold cursor-pointer shadow-2xs"
                 >
-                  <Send className="w-3.5 h-3.5" />
-                  <span>Save & Record Action</span>
+                  Commit Resolution & Update Registry
                 </button>
               </div>
+
             </form>
+
           </div>
         </div>
       )}

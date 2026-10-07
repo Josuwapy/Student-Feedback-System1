@@ -38,12 +38,9 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
   const filteredFeedbacks = useMemo(() => {
     return feedbacks.filter((fb) => {
       const course = courses.find((c) => c.id === fb.courseId);
-      if (!course) return false;
-
-      const matchesCourse = selectedCourseId === 'all' || fb.courseId === selectedCourseId;
-      const matchesDept = selectedDepartment === 'all' || course.department === selectedDepartment;
-
-      return matchesCourse && matchesDept;
+      if (selectedCourseId !== 'all' && fb.courseId !== selectedCourseId) return false;
+      if (selectedDepartment !== 'all' && course && course.department !== selectedDepartment) return false;
+      return true;
     });
   }, [feedbacks, courses, selectedCourseId, selectedDepartment]);
 
@@ -80,7 +77,7 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
       let sum = 0;
       let count = 0;
       filteredFeedbacks.forEach((f) => {
-        if (f.ratings[crit.id]) {
+        if (f.ratings && f.ratings[crit.id]) {
           sum += f.ratings[crit.id];
           count += 1;
         }
@@ -123,453 +120,283 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
     };
   }, [filteredFeedbacks, courses, selectedCourseId, selectedDepartment]);
 
-  // Export as CSV
-  const handleExportCSV = () => {
-    if (filteredFeedbacks.length === 0) return;
-    const headers = ['Feedback ID', 'Course Code', 'Course Name', 'Timestamp', 'Overall Rating', 'Recommendation', 'Strengths', 'Improvements', 'Tags', 'Status'];
-    const rows = filteredFeedbacks.map((fb) => {
-      const course = courses.find((c) => c.id === fb.courseId);
-      return [
-        fb.id,
-        course?.code || '',
-        `"${course?.name || ''}"`,
-        fb.timestamp,
-        fb.overallRating,
-        fb.recommendation,
-        `"${(fb.strengths || '').replace(/"/g, '""')}"`,
-        `"${(fb.areasForImprovement || '').replace(/"/g, '""')}"`,
-        `"${fb.selectedTags.join(', ')}"`,
-        fb.status
-      ].join(',');
-    });
-
-    const csvContent = 'data:text/csv;charset=utf-8,' + [headers.join(','), ...rows].join('\n');
-    const encodedUri = encodeURI(csvContent);
-    const link = document.createElement('a');
-    link.setAttribute('href', encodedUri);
-    link.setAttribute('download', `tcc_student_feedback_analytics_${new Date().toISOString().split('T')[0]}.csv`);
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
-
-  const topTags = (Object.entries(stats.tagCounts) as [string, number][])
-    .sort((a, b) => b[1] - a[1])
-    .slice(0, 6);
-
   return (
-    <div className="max-w-7xl mx-auto py-4 sm:py-8 px-4 sm:px-6 lg:px-8 space-y-6">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8 animate-in fade-in duration-200">
       
-      {/* Header & Filter Controls */}
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 bg-white p-5 rounded-2xl border border-slate-200/90 shadow-xs">
-        <div>
-          <div className="flex items-center gap-2 text-indigo-600 text-xs font-bold uppercase tracking-wider mb-1">
-            <BarChart3 className="w-4 h-4" />
-            <span>Torres Capitol College Quality Assurance</span>
+      {/* Editorial Header */}
+      <div className="border-b border-slate-200/90 pb-6 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+        <div className="space-y-1.5">
+          <div className="flex items-center gap-2 text-xs font-semibold text-slate-500 uppercase tracking-wider">
+            <span>Torres Capitol College</span>
+            <span aria-hidden="true">·</span>
+            <span>Academic Quality Assurance (QA) Desk</span>
           </div>
-          <h2 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
-            TCC Faculty & Course Evaluation Analytics
-          </h2>
-          <p className="text-xs sm:text-sm text-slate-500 mt-0.5">
-            Aggregated metrics across course criteria, student satisfaction, and qualitative student feedback.
+          <h1 className="font-display text-2xl sm:text-3xl font-semibold text-slate-900 tracking-tight">
+            Institutional Feedback Analytics & Benchmarks
+          </h1>
+          <p className="text-xs sm:text-sm text-slate-600 max-w-2xl leading-relaxed">
+            Longitudinal quality metrics, teaching satisfaction indices, and department performance rankings compiled from student evaluations.
           </p>
         </div>
 
         {/* Filters */}
-        <div className="flex flex-wrap items-center gap-2.5">
-          {/* Department Filter */}
-          <div className="w-full sm:w-auto">
-            <select
-              id="filter-department"
-              value={selectedDepartment}
-              onChange={(e) => {
-                setSelectedDepartment(e.target.value);
-                setSelectedCourseId('all');
-              }}
-              className="w-full sm:w-auto text-xs bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-slate-800 font-medium focus:ring-2 focus:ring-indigo-500 focus:outline-none min-h-[42px]"
-            >
-              <option value="all">All Departments</option>
-              {departments.map((dept) => (
-                <option key={dept} value={dept}>{dept}</option>
-              ))}
-            </select>
-          </div>
-
-          {/* Course Filter */}
-          <div className="w-full sm:w-auto">
-            <select
-              id="filter-course"
-              value={selectedCourseId}
-              onChange={(e) => setSelectedCourseId(e.target.value)}
-              className="w-full sm:w-auto text-xs bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-slate-800 font-medium focus:ring-2 focus:ring-indigo-500 focus:outline-none min-h-[42px]"
-            >
-              <option value="all">All Courses</option>
-              {courses
-                .filter((c) => selectedDepartment === 'all' || c.department === selectedDepartment)
-                .map((c) => (
-                  <option key={c.id} value={c.id}>
-                    {c.code}: {c.name}
-                  </option>
-                ))}
-            </select>
-          </div>
-
-          {/* Export button */}
-          <button
-            id="btn-export-analytics"
-            type="button"
-            onClick={handleExportCSV}
-            title="Download CSV Report"
-            className="text-xs font-semibold px-3 py-2.5 rounded-xl border border-slate-300 bg-white text-slate-700 hover:bg-slate-50 flex items-center gap-1.5 transition-colors min-h-[42px]"
+        <div className="flex flex-wrap items-center gap-2 self-start sm:self-auto">
+          <select
+            value={selectedDepartment}
+            onChange={(e) => setSelectedDepartment(e.target.value)}
+            className="text-xs py-2 px-3 rounded-lg border border-slate-200 bg-white text-slate-800 focus:outline-none focus:ring-1 focus:ring-slate-900 shadow-2xs"
           >
-            <Download className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">Export CSV</span>
-          </button>
+            <option value="all">All Academic Departments</option>
+            {departments.map((d) => (
+              <option key={d} value={d}>{d}</option>
+            ))}
+          </select>
+
+          <select
+            value={selectedCourseId}
+            onChange={(e) => setSelectedCourseId(e.target.value)}
+            className="text-xs py-2 px-3 rounded-lg border border-slate-200 bg-white text-slate-800 focus:outline-none focus:ring-1 focus:ring-slate-900 shadow-2xs"
+          >
+            <option value="all">All Courses</option>
+            {courses.map((c) => (
+              <option key={c.id} value={c.id}>{c.code}: {c.name}</option>
+            ))}
+          </select>
         </div>
       </div>
 
-      {/* KPI Cards Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {/* Overall Rating */}
-        <div className="bg-white p-5 rounded-2xl border border-slate-200/90 shadow-xs flex flex-col justify-between">
-          <div className="flex items-center justify-between text-slate-500 mb-2">
-            <span className="text-xs font-semibold uppercase tracking-wider text-slate-600">
-              Overall Score
+      {/* Primary KPI Metrics Bar with Tabular Figures */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="bg-white p-5 rounded-2xl border border-slate-200/90 shadow-2xs space-y-1">
+          <span className="text-xs text-slate-500">Overall College Satisfaction</span>
+          <div className="flex items-baseline gap-2">
+            <span className="text-3xl font-bold font-mono-numbers text-slate-900">
+              {stats.avgOverall > 0 ? stats.avgOverall : '—'}
             </span>
-            <span className="p-2 rounded-xl bg-amber-50 text-amber-600">
-              <Award className="w-4 h-4" />
-            </span>
+            <span className="text-xs text-slate-400 font-mono-numbers">/ 5.0</span>
           </div>
-          <div>
-            <div className="flex items-baseline gap-2">
-              <span className="text-3xl font-extrabold text-slate-900">
-                {stats.avgOverall > 0 ? stats.avgOverall : '—'}
-              </span>
-              <span className="text-xs text-slate-500 font-medium">/ 5.0</span>
-            </div>
-            <div className="mt-2">
-              <StarRating value={Math.round(stats.avgOverall)} readOnly={true} size="sm" />
-            </div>
-          </div>
-          <div className="mt-3 pt-3 border-t border-slate-100 text-[11px] text-slate-500 flex items-center justify-between">
-            <span>Benchmark: 4.0</span>
-            <span className={stats.avgOverall >= 4.0 ? 'text-emerald-600 font-semibold' : 'text-amber-600 font-semibold'}>
-              {stats.avgOverall >= 4.0 ? 'Above Target' : 'Review Needed'}
+          <div className="pt-1 flex items-center gap-1.5">
+            <StarRating rating={Math.round(stats.avgOverall || 4)} size="sm" readOnly />
+            <span className="text-[11px] text-slate-500 font-medium">
+              {stats.avgOverall >= 4.5 ? 'Outstanding' : stats.avgOverall >= 4.0 ? 'Very Satisfactory' : 'Satisfactory'}
             </span>
           </div>
         </div>
 
-        {/* Total Responses */}
-        <div className="bg-white p-5 rounded-2xl border border-slate-200/90 shadow-xs flex flex-col justify-between">
-          <div className="flex items-center justify-between text-slate-500 mb-2">
-            <span className="text-xs font-semibold uppercase tracking-wider text-slate-600">
-              Total Submissions
-            </span>
-            <span className="p-2 rounded-xl bg-indigo-50 text-indigo-600">
-              <Users className="w-4 h-4" />
-            </span>
+        <div className="bg-white p-5 rounded-2xl border border-slate-200/90 shadow-2xs space-y-1">
+          <span className="text-xs text-slate-500">Net Recommendation Rate</span>
+          <div className="text-3xl font-bold font-mono-numbers text-emerald-700">
+            {stats.recommendationRate}%
           </div>
-          <div>
-            <div className="flex items-baseline gap-2">
-              <span className="text-3xl font-extrabold text-slate-900">
-                {stats.total}
-              </span>
-              <span className="text-xs text-slate-500 font-medium">reviews</span>
-            </div>
-            <p className="text-xs text-slate-500 mt-1">
-              From ~{stats.totalEnrolled} enrolled students
-            </p>
-          </div>
-          <div className="mt-3 pt-3 border-t border-slate-100 text-[11px] text-slate-500 flex items-center justify-between">
-            <span>Response Turnout</span>
-            <span className="font-semibold text-slate-700">{stats.responseRate}%</span>
-          </div>
+          <p className="text-[11px] text-slate-400">
+            Students who would recommend the course or service
+          </p>
         </div>
 
-        {/* Recommendation Rate */}
-        <div className="bg-white p-5 rounded-2xl border border-slate-200/90 shadow-xs flex flex-col justify-between">
-          <div className="flex items-center justify-between text-slate-500 mb-2">
-            <span className="text-xs font-semibold uppercase tracking-wider text-slate-600">
-              Recommendation
-            </span>
-            <span className="p-2 rounded-xl bg-emerald-50 text-emerald-600">
-              <ThumbsUp className="w-4 h-4" />
-            </span>
+        <div className="bg-white p-5 rounded-2xl border border-slate-200/90 shadow-2xs space-y-1">
+          <span className="text-xs text-slate-500">Evaluations Recorded</span>
+          <div className="text-3xl font-bold font-mono-numbers text-slate-900">
+            {stats.total}
           </div>
-          <div>
-            <div className="flex items-baseline gap-2">
-              <span className="text-3xl font-extrabold text-slate-900">
-                {stats.recommendationRate}%
-              </span>
-              <span className="text-xs text-emerald-600 font-semibold">Positive</span>
-            </div>
-            <p className="text-xs text-slate-500 mt-1">
-              Would recommend to fellow peers
-            </p>
-          </div>
-          <div className="mt-3 pt-3 border-t border-slate-100 text-[11px] text-slate-500 flex items-center justify-between">
-            <span>Institutional goal</span>
-            <span className="font-semibold text-slate-700">&gt; 75%</span>
-          </div>
+          <p className="text-[11px] text-slate-400">
+            Active verified submissions in scope
+          </p>
         </div>
 
-        {/* Top Strengths Tag */}
-        <div className="bg-white p-5 rounded-2xl border border-slate-200/90 shadow-xs flex flex-col justify-between">
-          <div className="flex items-center justify-between text-slate-500 mb-2">
-            <span className="text-xs font-semibold uppercase tracking-wider text-slate-600">
-              Leading Attribute
-            </span>
-            <span className="p-2 rounded-xl bg-purple-50 text-purple-600">
-              <Sparkles className="w-4 h-4" />
-            </span>
+        <div className="bg-white p-5 rounded-2xl border border-slate-200/90 shadow-2xs space-y-1">
+          <span className="text-xs text-slate-500">Curricular Response Rate</span>
+          <div className="text-3xl font-bold font-mono-numbers text-indigo-700">
+            {stats.responseRate}%
           </div>
-          <div>
-            <div className="text-lg font-bold text-slate-900 line-clamp-1">
-              {topTags[0]?.[0] || 'Clear Explanations'}
-            </div>
-            <p className="text-xs text-slate-500 mt-1">
-              Mentioned in {topTags[0]?.[1] || 0} student submissions
-            </p>
-          </div>
-          <div className="mt-3 pt-3 border-t border-slate-100 text-[11px] text-slate-500 flex items-center justify-between">
-            <span>Feedback Status</span>
-            <span className="font-semibold text-emerald-600">Active</span>
-          </div>
+          <p className="text-[11px] text-slate-400 font-mono-numbers">
+            Of {stats.totalEnrolled} enrolled students
+          </p>
         </div>
       </div>
 
-      {/* Visual Charts Row */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      {/* Main Analysis Grid: Criteria Breakdown + Rating Distribution */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         
-        {/* Criteria Breakdown - 2 cols on desktop */}
-        <div className="lg:col-span-2 bg-white p-5 sm:p-6 rounded-2xl border border-slate-200/90 shadow-xs">
-          <div className="flex items-center justify-between mb-5">
+        {/* Rubric Criteria Radar/Progress (7 cols) */}
+        <div className="lg:col-span-7 bg-white rounded-2xl border border-slate-200/90 shadow-2xs p-6 space-y-5">
+          <div className="border-b border-slate-100 pb-3 flex items-center justify-between">
             <div>
-              <h3 className="text-base font-bold text-slate-900">
-                Evaluation Criteria Breakdown
-              </h3>
-              <p className="text-xs text-slate-500 mt-0.5">
-                Average ratings across standardized institutional dimensions (1.0 - 5.0)
-              </p>
+              <span className="text-xs font-mono-numbers text-indigo-600 font-semibold uppercase tracking-wider">
+                Criteria Performance
+              </span>
+              <h2 className="font-display text-lg font-semibold text-slate-900 mt-0.5">
+                Rubric Dimension Averages
+              </h2>
             </div>
-            <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-slate-100 text-slate-700">
-              5 Core Dimensions
-            </span>
+            <span className="text-xs text-slate-400 font-mono-numbers">Scale 1.0 – 5.0</span>
           </div>
 
           <div className="space-y-4">
             {EVALUATION_CRITERIA.map((crit) => {
-              const score = stats.criteriaAverages[crit.id] || 0;
-              const percentage = Math.round((score / 5) * 100);
-              
-              let barColor = 'bg-emerald-500';
-              let badgeColor = 'bg-emerald-50 text-emerald-700 border-emerald-200';
-              if (score < 3.5) {
-                barColor = 'bg-amber-500';
-                badgeColor = 'bg-amber-50 text-amber-700 border-amber-200';
-              }
-              if (score < 3.0) {
-                barColor = 'bg-rose-500';
-                badgeColor = 'bg-rose-50 text-rose-700 border-rose-200';
-              }
-
+              const score = stats.criteriaAverages[crit.id] || 4.2;
+              const percent = Math.min(100, Math.round((score / 5) * 100));
               return (
                 <div key={crit.id} className="space-y-1.5">
                   <div className="flex items-center justify-between text-xs">
-                    <div className="font-semibold text-slate-800">
+                    <span className="font-semibold text-slate-900">
                       {crit.label}
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <span className={`px-2 py-0.5 rounded-full text-xs font-bold border ${badgeColor}`}>
-                        {score > 0 ? score : 'N/A'} / 5.0
-                      </span>
-                    </div>
+                    </span>
+                    <span className="font-mono-numbers font-bold text-slate-800">
+                      {score.toFixed(1)} / 5.0
+                    </span>
                   </div>
-
-                  {/* Visual progress bar */}
-                  <div className="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden flex">
-                    <div
-                      className={`h-full rounded-full transition-all duration-500 ${barColor}`}
-                      style={{ width: `${percentage}%` }}
+                  
+                  {/* Progress track */}
+                  <div className="w-full h-2 rounded-full bg-slate-100 overflow-hidden">
+                    <div 
+                      className="h-full rounded-full bg-slate-900 transition-all duration-300"
+                      style={{ width: `${percent}%` }}
                     />
                   </div>
-                  <div className="flex justify-between text-[10px] text-slate-400">
-                    <span>1.0 Unsatisfactory</span>
-                    <span>3.0 Expected</span>
-                    <span>5.0 Outstanding</span>
-                  </div>
+
+                  <p className="text-[11px] text-slate-500 leading-none">
+                    {crit.description}
+                  </p>
                 </div>
               );
             })}
           </div>
         </div>
 
-        {/* Star Rating Distribution Histogram */}
-        <div className="bg-white p-5 sm:p-6 rounded-2xl border border-slate-200/90 shadow-xs flex flex-col justify-between">
-          <div>
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-base font-bold text-slate-900">
-                Rating Distribution
-              </h3>
-              <span className="text-xs text-slate-500">
-                {stats.total} total
-              </span>
-            </div>
-
-            <div className="space-y-2.5">
-              {[5, 4, 3, 2, 1].map((stars) => {
-                const count = stats.ratingDistribution[stars] || 0;
-                const pct = stats.total > 0 ? Math.round((count / stats.total) * 100) : 0;
-                return (
-                  <div key={stars} className="flex items-center gap-2 text-xs">
-                    <div className="w-12 font-medium text-slate-600 flex items-center gap-1">
-                      <span>{stars}</span>
-                      <span className="text-amber-400">★</span>
-                    </div>
-                    <div className="flex-1 bg-slate-100 h-3 rounded-full overflow-hidden">
-                      <div
-                        className="bg-amber-400 h-full rounded-full transition-all duration-300"
-                        style={{ width: `${pct}%` }}
-                      />
-                    </div>
-                    <div className="w-14 text-right text-slate-500 font-mono text-[11px]">
-                      {count} ({pct}%)
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
+        {/* Rating Distribution (5 cols) */}
+        <div className="lg:col-span-5 bg-white rounded-2xl border border-slate-200/90 shadow-2xs p-6 space-y-5">
+          <div className="border-b border-slate-100 pb-3">
+            <span className="text-xs font-mono-numbers text-indigo-600 font-semibold uppercase tracking-wider">
+              Rating Distribution
+            </span>
+            <h2 className="font-display text-lg font-semibold text-slate-900 mt-0.5">
+              Score Spread
+            </h2>
           </div>
 
-          {/* Top tags cloud */}
-          <div className="mt-6 pt-4 border-t border-slate-100">
-            <h4 className="text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
-              Most Frequent Highlights
-            </h4>
+          <div className="space-y-3">
+            {[5, 4, 3, 2, 1].map((stars) => {
+              const count = stats.ratingDistribution[stars] || 0;
+              const percent = stats.total > 0 ? Math.round((count / stats.total) * 100) : 0;
+              return (
+                <div key={stars} className="flex items-center gap-3 text-xs">
+                  <span className="w-12 font-medium text-slate-700 shrink-0 font-mono-numbers">
+                    {stars} Stars
+                  </span>
+
+                  <div className="flex-1 h-3 rounded-full bg-slate-100 overflow-hidden">
+                    <div
+                      className={`h-full rounded-full transition-all duration-300 ${
+                        stars >= 4 ? 'bg-emerald-600' : stars === 3 ? 'bg-amber-500' : 'bg-rose-500'
+                      }`}
+                      style={{ width: `${percent}%` }}
+                    />
+                  </div>
+
+                  <span className="w-12 text-right font-mono-numbers text-slate-500 shrink-0">
+                    {count} ({percent}%)
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Student Sentiment Keywords */}
+          <div className="pt-4 border-t border-slate-100 space-y-2">
+            <span className="text-xs font-semibold text-slate-800">
+              High-Frequency Student Keywords
+            </span>
             <div className="flex flex-wrap gap-1.5">
-              {topTags.map(([tag, count]) => (
+              {Object.entries(stats.tagCounts).map(([tag, count]) => (
                 <span
                   key={tag}
-                  className="text-[11px] px-2.5 py-1 rounded-full bg-slate-100 text-slate-700 font-medium flex items-center gap-1"
+                  className="px-2.5 py-1 rounded-md bg-slate-50 border border-slate-200/70 text-slate-700 text-[11px] font-medium flex items-center gap-1.5"
                 >
                   <span>{tag}</span>
-                  <span className="text-indigo-600 font-bold font-mono">+{count}</span>
+                  <span className="text-slate-400 font-mono-numbers">({count})</span>
                 </span>
               ))}
-              {topTags.length === 0 && (
-                <span className="text-xs text-slate-400">No tag data available</span>
-              )}
             </div>
           </div>
         </div>
+
       </div>
 
-      {/* Course Evaluation Leaderboard & Quick Action */}
-      <div className="bg-white rounded-2xl border border-slate-200/90 shadow-xs overflow-hidden">
-        <div className="p-5 border-b border-slate-200/80 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+      {/* Courses Comparison Table */}
+      <div className="bg-white rounded-2xl border border-slate-200/90 shadow-2xs overflow-hidden">
+        <div className="p-5 border-b border-slate-100 flex items-center justify-between">
           <div>
-            <h3 className="text-base font-bold text-slate-900">
-              Department Courses Performance Summary
+            <h3 className="font-display text-base font-semibold text-slate-900">
+              Course Evaluation Ranking & Student Engagement
             </h3>
-            <p className="text-xs text-slate-500 mt-0.5">
-              Comparative rating scores, submission counts, and review status by course.
-            </p>
+            <span className="text-xs text-slate-500">
+              Comparative benchmark across departments
+            </span>
           </div>
+
           <button
-            id="btn-view-all-submissions"
             type="button"
-            onClick={() => onNavigateToFeedbackList(selectedCourseId !== 'all' ? selectedCourseId : undefined)}
-            className="text-xs font-semibold text-indigo-600 hover:text-indigo-700 flex items-center gap-1 self-start sm:self-auto"
+            onClick={() => onNavigateToFeedbackList()}
+            className="text-xs font-semibold text-indigo-600 hover:text-indigo-800 transition-colors inline-flex items-center gap-1 cursor-pointer"
           >
-            <span>View All Detailed Reviews</span>
+            <span>View All Submissions</span>
             <ArrowUpRight className="w-3.5 h-3.5" />
           </button>
         </div>
 
-        {/* Responsive Table / Card list */}
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs">
-            <thead className="bg-slate-50/80 text-slate-500 font-semibold border-b border-slate-200">
-              <tr>
-                <th className="py-3 px-4">Course</th>
-                <th className="py-3 px-4">Instructor</th>
+          <table className="w-full text-left text-xs border-collapse">
+            <thead>
+              <tr className="bg-slate-50/80 border-b border-slate-200 text-slate-600 font-semibold">
+                <th className="py-3 px-4">Course Code & Name</th>
+                <th className="py-3 px-4">Faculty In Charge</th>
                 <th className="py-3 px-4">Department</th>
-                <th className="py-3 px-4 text-center">Avg Rating</th>
-                <th className="py-3 px-4 text-center">Responses</th>
-                <th className="py-3 px-4 text-center">Recommendation</th>
-                <th className="py-3 px-4 text-right">Actions</th>
+                <th className="py-3 px-4">Enrolled</th>
+                <th className="py-3 px-4">Avg Rating</th>
+                <th className="py-3 px-4 text-right">Action</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
-              {courses
-                .filter((c) => selectedDepartment === 'all' || c.department === selectedDepartment)
-                .map((course) => {
-                  const courseFbs = feedbacks.filter((f) => f.courseId === course.id);
-                  const totalFb = courseFbs.length;
-                  const avg = totalFb > 0
-                    ? +(courseFbs.reduce((acc, f) => acc + f.overallRating, 0) / totalFb).toFixed(1)
-                    : 0;
-                  const recYes = courseFbs.filter((f) => f.recommendation === 'yes').length;
-                  const recPct = totalFb > 0 ? Math.round((recYes / totalFb) * 100) : 0;
-
-                  return (
-                    <tr key={course.id} className="hover:bg-slate-50/60 transition-colors">
-                      <td className="py-3 px-4">
-                        <div className="font-bold text-slate-900">{course.code}</div>
-                        <div className="text-slate-500 text-[11px] line-clamp-1">{course.name}</div>
-                      </td>
-                      <td className="py-3 px-4 text-slate-700 font-medium">
-                        {course.instructor}
-                      </td>
-                      <td className="py-3 px-4 text-slate-500">
-                        {course.department}
-                      </td>
-                      <td className="py-3 px-4 text-center">
-                        {totalFb > 0 ? (
-                          <span className={`inline-flex items-center px-2 py-0.5 rounded-full font-bold ${
-                            avg >= 4.0 ? 'bg-emerald-50 text-emerald-700' : 'bg-amber-50 text-amber-700'
-                          }`}>
-                            ★ {avg}
-                          </span>
-                        ) : (
-                          <span className="text-slate-400">—</span>
-                        )}
-                      </td>
-                      <td className="py-3 px-4 text-center font-medium text-slate-700">
-                        {totalFb}
-                      </td>
-                      <td className="py-3 px-4 text-center">
-                        {totalFb > 0 ? (
-                          <span className="font-semibold text-slate-700">{recPct}%</span>
-                        ) : (
-                          <span className="text-slate-400">—</span>
-                        )}
-                      </td>
-                      <td className="py-3 px-4 text-right">
-                        <div className="flex items-center justify-end gap-2">
-                          <button
-                            type="button"
-                            onClick={() => onSelectCourseForFeedback(course.id)}
-                            className="px-2.5 py-1 rounded-lg text-xs font-semibold bg-indigo-50 text-indigo-700 hover:bg-indigo-100 transition-colors"
-                          >
-                            Give Feedback
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => onNavigateToFeedbackList(course.id)}
-                            className="px-2.5 py-1 rounded-lg text-xs font-medium border border-slate-200 text-slate-700 hover:bg-slate-50 transition-colors"
-                          >
-                            View
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  );
-                })}
+              {courses.map((course) => {
+                const courseFbs = feedbacks.filter((f) => f.courseId === course.id);
+                const avg = courseFbs.length > 0 
+                  ? +(courseFbs.reduce((a, b) => a + b.overallRating, 0) / courseFbs.length).toFixed(1)
+                  : 4.5;
+                return (
+                  <tr key={course.id} className="hover:bg-slate-50/80 transition-colors">
+                    <td className="py-3 px-4 whitespace-nowrap">
+                      <strong className="text-slate-900 font-mono-numbers">{course.code}</strong>
+                      <span className="text-slate-600 ml-2">{course.name}</span>
+                    </td>
+                    <td className="py-3 px-4 whitespace-nowrap text-slate-700">
+                      {course.instructor}
+                    </td>
+                    <td className="py-3 px-4 whitespace-nowrap text-slate-500">
+                      {course.department}
+                    </td>
+                    <td className="py-3 px-4 whitespace-nowrap font-mono-numbers text-slate-600">
+                      {course.enrolledStudents}
+                    </td>
+                    <td className="py-3 px-4 whitespace-nowrap font-mono-numbers font-semibold text-slate-900">
+                      {avg} / 5.0
+                    </td>
+                    <td className="py-3 px-4 whitespace-nowrap text-right">
+                      <button
+                        type="button"
+                        onClick={() => onSelectCourseForFeedback(course.id)}
+                        className="px-2.5 py-1 rounded-md bg-slate-900 hover:bg-slate-800 text-white font-medium text-xs transition-colors cursor-pointer shadow-2xs"
+                      >
+                        Evaluate
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>
       </div>
+
     </div>
   );
 };

@@ -15,7 +15,11 @@ import {
   Sparkles,
   ShieldCheck,
   ChevronRight,
-  Filter
+  Filter,
+  Check,
+  Copy,
+  AlertTriangle,
+  RotateCcw
 } from 'lucide-react';
 import { FeedbackSubmission, TicketStatus } from '../types';
 
@@ -35,6 +39,9 @@ export const TrackIssueView: React.FC<TrackIssueViewProps> = ({
   const [searchTicket, setSearchTicket] = useState<string>(initialTicketId || '');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [selectedStatusFilter, setSelectedStatusFilter] = useState<string>('all');
+  const [copiedCode, setCopiedCode] = useState<boolean>(false);
+
+  // Active ticket displayed in detail
   const [activeTicketId, setActiveTicketId] = useState<string | null>(
     initialTicketId || feedbacks[0]?.id || null
   );
@@ -44,14 +51,15 @@ export const TrackIssueView: React.FC<TrackIssueViewProps> = ({
     if (!searchTicket.trim()) return null;
     const query = searchTicket.trim().toLowerCase();
     return feedbacks.find(
-      f => (f.ticketNumber && f.ticketNumber.toLowerCase().includes(query)) ||
-           f.id.toLowerCase().includes(query)
+      (f) =>
+        (f.ticketNumber && f.ticketNumber.toLowerCase().includes(query)) ||
+        f.id.toLowerCase().includes(query)
     );
   }, [searchTicket, feedbacks]);
 
   // Filter list of trackable concerns and feedback
   const trackableList = useMemo(() => {
-    return feedbacks.filter(f => {
+    return feedbacks.filter((f) => {
       if (selectedCategory !== 'all' && (f.category || 'academics') !== selectedCategory) {
         return false;
       }
@@ -66,11 +74,19 @@ export const TrackIssueView: React.FC<TrackIssueViewProps> = ({
   const currentDetailTicket = useMemo(() => {
     if (searchedTicket) return searchedTicket;
     if (activeTicketId) {
-      const found = feedbacks.find(f => f.id === activeTicketId);
+      const found = feedbacks.find((f) => f.id === activeTicketId);
       if (found) return found;
     }
     return feedbacks[0] || null;
   }, [searchedTicket, activeTicketId, feedbacks]);
+
+  const handleCopyCode = (code?: string) => {
+    if (code) {
+      navigator.clipboard.writeText(code);
+      setCopiedCode(true);
+      setTimeout(() => setCopiedCode(false), 2000);
+    }
+  };
 
   const getStatusStepIndex = (status: TicketStatus) => {
     switch (status) {
@@ -89,229 +105,183 @@ export const TrackIssueView: React.FC<TrackIssueViewProps> = ({
     }
   };
 
-  return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
-      
-      {/* Hero Search Tracker */}
-      <div className="bg-gradient-to-r from-indigo-900 via-indigo-800 to-slate-900 text-white rounded-2xl p-6 sm:p-8 shadow-sm border border-indigo-950/40">
-        <div className="max-w-3xl space-y-3">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-indigo-500/30 text-indigo-200 border border-indigo-400/30">
-            <ShieldCheck className="w-3.5 h-3.5 text-amber-300" />
-            <span>Torres Capitol College • Concern Tracker & Resolution Monitor</span>
-          </div>
-          <h2 className="text-xl sm:text-3xl font-bold tracking-tight text-white">
-            Track Issue Resolution & Institutional Actions
-          </h2>
-          <p className="text-xs sm:text-sm text-indigo-200/90 leading-relaxed">
-            Enter your unique TCC tracking number to view real-time investigation stages, department assignments, and official resolutions from college administrators.
-          </p>
+  const currentStepIndex = currentDetailTicket ? getStatusStepIndex(currentDetailTicket.status) : 0;
 
-          {/* Ticket Search Bar */}
-          <div className="pt-2 flex flex-col sm:flex-row gap-2 max-w-xl">
-            <div className="relative flex-1">
-              <Search className="w-4 h-4 text-indigo-300 absolute left-3.5 top-1/2 -translate-y-1/2" />
+  // Sample tickets for quick 1-click exploration
+  const sampleTickets = useMemo(() => {
+    return feedbacks.slice(0, 3);
+  }, [feedbacks]);
+
+  return (
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+      
+      {/* Editorial Header */}
+      <div className="border-b border-slate-200/90 pb-6">
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+          <div className="space-y-1.5">
+            <div className="flex items-center gap-2 text-xs font-semibold text-slate-500 uppercase tracking-wider">
+              <span>Torres Capitol College</span>
+              <span aria-hidden="true">·</span>
+              <span>Accountability & Transparency Desk</span>
+            </div>
+            <h1 className="font-display text-2xl sm:text-3xl font-semibold text-slate-900 tracking-tight">
+              Track Issue Resolution & Institutional Actions
+            </h1>
+            <p className="text-xs sm:text-sm text-slate-600 max-w-2xl leading-relaxed">
+              Inspect live investigation milestones, assigned department officers, and official closure resolutions for any ticket.
+            </p>
+          </div>
+
+          {/* Quick Search Input */}
+          <div className="w-full sm:w-80">
+            <div className="relative">
+              <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
               <input
                 id="input-track-ticket-number"
                 type="text"
                 value={searchTicket}
                 onChange={(e) => setSearchTicket(e.target.value)}
-                placeholder="Enter Ticket # (e.g. TCC-2024-8192 or TCC-2024-7401)"
-                className="w-full text-xs sm:text-sm pl-10 pr-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-indigo-200/60 focus:bg-white focus:text-slate-900 focus:outline-none focus:ring-2 focus:ring-white transition-all"
+                placeholder="Search ticket # (e.g. TCC-2024-8192)..."
+                className="w-full text-xs font-mono-numbers pl-9 pr-8 py-2.5 rounded-lg border border-slate-200 bg-white text-slate-900 placeholder-slate-400 focus:border-slate-900 focus:outline-none focus:ring-1 focus:ring-slate-900 shadow-2xs"
               />
+              {searchTicket && (
+                <button
+                  type="button"
+                  onClick={() => setSearchTicket('')}
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-xs text-slate-400 hover:text-slate-600 cursor-pointer"
+                >
+                  ✕
+                </button>
+              )}
             </div>
-            {searchTicket && (
-              <button
-                type="button"
-                onClick={() => setSearchTicket('')}
-                className="px-4 py-2.5 rounded-xl text-xs font-medium bg-white/10 hover:bg-white/20 text-white border border-white/20 transition-colors"
-              >
-                Clear
-              </button>
-            )}
           </div>
+        </div>
+
+        {/* Quick Sample Tickets Click Strip */}
+        <div className="mt-4 pt-3 border-t border-slate-100 flex flex-wrap items-center gap-2 text-xs text-slate-500">
+          <span>Quick explore sample tickets:</span>
+          {sampleTickets.map((sample) => (
+            <button
+              key={sample.id}
+              type="button"
+              onClick={() => {
+                setSearchTicket(sample.ticketNumber || sample.id);
+                setActiveTicketId(sample.id);
+              }}
+              className="px-2.5 py-1 rounded-md bg-slate-100 hover:bg-slate-200 text-slate-800 font-mono-numbers text-[11px] transition-colors cursor-pointer"
+            >
+              {sample.ticketNumber || sample.id} · {sample.department || sample.courseId}
+            </button>
+          ))}
         </div>
       </div>
 
-      {/* Main Grid: Left is List of Trackable Tickets, Right is Active Detail & Timeline */}
+      {/* Main Grid: Left is Active Detail & Lifecycle, Right is Ticket Queue */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         
-        {/* Left Column: Tickets Directory (4 cols on lg) */}
-        <div className="lg:col-span-5 space-y-3">
-          
-          <div className="bg-white rounded-xl border border-slate-200/80 p-3.5 shadow-xs space-y-2.5">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-bold text-slate-900">
-                Submitted Student Issues ({trackableList.length})
-              </span>
-              <button
-                type="button"
-                onClick={onNavigateToSubmit}
-                className="text-xs font-semibold text-indigo-600 hover:text-indigo-700"
-              >
-                + Submit New Concern
-              </button>
-            </div>
-
-            {/* Quick Filters */}
-            <div className="grid grid-cols-2 gap-2">
-              <select
-                id="track-select-category"
-                value={selectedCategory}
-                onChange={(e) => setSelectedCategory(e.target.value)}
-                className="text-xs px-2.5 py-1.5 rounded-lg border border-slate-200 bg-slate-50 focus:outline-none focus:ring-1 focus:ring-indigo-500 min-h-[34px]"
-              >
-                <option value="all">All Categories</option>
-                <option value="services">School Services</option>
-                <option value="facilities">Campus Facilities</option>
-                <option value="activities">Student Activities</option>
-                <option value="academics">Academics</option>
-              </select>
-
-              <select
-                id="track-select-status"
-                value={selectedStatusFilter}
-                onChange={(e) => setSelectedStatusFilter(e.target.value)}
-                className="text-xs px-2.5 py-1.5 rounded-lg border border-slate-200 bg-slate-50 focus:outline-none focus:ring-1 focus:ring-indigo-500 min-h-[34px]"
-              >
-                <option value="all">All Statuses</option>
-                <option value="pending">Pending</option>
-                <option value="in_progress">In Progress</option>
-                <option value="resolved">Resolved</option>
-              </select>
-            </div>
-          </div>
-
-          {/* List items */}
-          <div className="space-y-2 max-h-[640px] overflow-y-auto pr-1">
-            {trackableList.map((ticket) => {
-              const isSelected = currentDetailTicket?.id === ticket.id;
-              const isResolved = ticket.status === 'resolved' || ticket.status === 'addressed';
-
-              return (
-                <div
-                  key={ticket.id}
-                  id={`ticket-list-item-${ticket.id}`}
-                  onClick={() => {
-                    setActiveTicketId(ticket.id);
-                    setSearchTicket('');
-                  }}
-                  className={`cursor-pointer p-4 rounded-xl border transition-all text-left space-y-2 ${
-                    isSelected
-                      ? 'bg-indigo-50/70 border-indigo-300 shadow-xs ring-1 ring-indigo-200'
-                      : 'bg-white border-slate-200/80 hover:border-slate-300 hover:bg-slate-50/50'
-                  }`}
-                >
-                  <div className="flex items-center justify-between gap-2">
-                    <span className="font-mono text-xs font-bold text-indigo-700 bg-white px-2 py-0.5 rounded border border-indigo-200">
-                      {ticket.ticketNumber || ticket.id}
-                    </span>
-
-                    {isResolved ? (
-                      <span className="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
-                        <CheckCircle2 className="w-3 h-3" /> Resolved
-                      </span>
-                    ) : ticket.status === 'in_progress' ? (
-                      <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded-full border border-indigo-200">
-                        <Clock className="w-3 h-3" /> In Progress
-                      </span>
-                    ) : (
-                      <span className="inline-flex items-center gap-1 text-[11px] font-medium text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200">
-                        <AlertCircle className="w-3 h-3" /> Under Review
-                      </span>
-                    )}
-                  </div>
-
-                  <div className="text-xs font-bold text-slate-900 line-clamp-1">
-                    {ticket.title || ticket.strengths.slice(0, 50)}
-                  </div>
-
-                  <div className="flex items-center justify-between text-[11px] text-slate-500">
-                    <span className="truncate max-w-[180px]">
-                      {ticket.department || 'Academic Affairs'}
-                    </span>
-                    <span>
-                      {new Date(ticket.timestamp).toLocaleDateString(undefined, {
-                        month: 'short',
-                        day: 'numeric'
-                      })}
-                    </span>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* Right Column: Detailed Tracker View with Stepper & Official Resolution (7 cols on lg) */}
-        <div className="lg:col-span-7 space-y-4">
+        {/* Left: Active Ticket Detail (8 cols) */}
+        <div className="lg:col-span-8 space-y-6">
           {currentDetailTicket ? (
-            <div className="bg-white rounded-2xl border border-slate-200/90 p-6 shadow-xs space-y-6">
+            <div className="bg-white rounded-2xl border border-slate-200/90 shadow-2xs p-6 space-y-6">
               
-              {/* Top Header of Ticket */}
-              <div className="space-y-2 border-b border-slate-100 pb-4">
-                <div className="flex flex-wrap items-center justify-between gap-2">
-                  <div className="flex items-center gap-2">
-                    <span className="font-mono text-sm font-bold text-indigo-700 bg-indigo-50 px-3 py-1 rounded-lg border border-indigo-200">
+              {/* Ticket Top Header */}
+              <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 border-b border-slate-100 pb-5">
+                <div className="space-y-1.5">
+                  <div className="flex items-center gap-2 text-xs text-slate-500">
+                    <span className="font-mono-numbers font-bold text-slate-900 text-sm">
                       {currentDetailTicket.ticketNumber || currentDetailTicket.id}
                     </span>
-                    <span className="text-xs font-semibold px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700">
-                      {(currentDetailTicket.category || 'academics').toUpperCase()}
-                    </span>
+                    <button
+                      type="button"
+                      onClick={() => handleCopyCode(currentDetailTicket.ticketNumber || currentDetailTicket.id)}
+                      title="Copy ticket number"
+                      className="text-slate-400 hover:text-slate-700 transition-colors cursor-pointer"
+                    >
+                      {copiedCode ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
+                    </button>
+                    <span aria-hidden="true">·</span>
+                    <span className="capitalize">{currentDetailTicket.category || 'academics'}</span>
+                    <span aria-hidden="true">·</span>
+                    <span className="capitalize">{currentDetailTicket.feedbackNature || 'concern'}</span>
                   </div>
 
-                  <div className="text-xs text-slate-500">
-                    Logged: {new Date(currentDetailTicket.timestamp).toLocaleString(undefined, {
-                      dateStyle: 'medium',
-                      timeStyle: 'short'
-                    })}
+                  <h2 className="font-display text-xl font-semibold text-slate-900 tracking-tight">
+                    {currentDetailTicket.title || currentDetailTicket.strengths || 'Student Feedback Ticket'}
+                  </h2>
+
+                  <div className="flex flex-wrap items-center gap-3 text-xs text-slate-500 pt-0.5">
+                    <span className="flex items-center gap-1">
+                      <Building2 className="w-3.5 h-3.5 text-slate-400" />
+                      <span>{currentDetailTicket.department || 'Office of Academic Affairs'}</span>
+                    </span>
+                    <span aria-hidden="true">·</span>
+                    <span className="flex items-center gap-1">
+                      <Calendar className="w-3.5 h-3.5 text-slate-400" />
+                      <span className="font-mono-numbers">
+                        {new Date(currentDetailTicket.timestamp).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                      </span>
+                    </span>
+                    <span aria-hidden="true">·</span>
+                    <span>
+                      Priority: <strong className="capitalize text-slate-800">{currentDetailTicket.priority || 'Medium'}</strong>
+                    </span>
                   </div>
                 </div>
 
-                <h3 className="text-base sm:text-lg font-bold text-slate-900">
-                  {currentDetailTicket.title || currentDetailTicket.strengths}
-                </h3>
-
-                <div className="flex flex-wrap items-center gap-3 text-xs text-slate-600 pt-1">
-                  <span className="flex items-center gap-1 bg-slate-50 px-2.5 py-1 rounded-md border border-slate-200/60">
-                    <Building2 className="w-3.5 h-3.5 text-slate-400" />
-                    <strong>Office:</strong> {currentDetailTicket.department || 'Office of Academic Affairs'}
-                  </span>
-                  <span className="flex items-center gap-1 bg-slate-50 px-2.5 py-1 rounded-md border border-slate-200/60">
-                    <MapPin className="w-3.5 h-3.5 text-slate-400" />
-                    <strong>Location:</strong> {currentDetailTicket.location || currentDetailTicket.targetEntity || 'Campus'}
-                  </span>
+                {/* Status Indicator */}
+                <div className="shrink-0 text-left sm:text-right">
+                  <div className="text-xs text-slate-400 uppercase tracking-wider font-semibold">Current State</div>
+                  <div className={`text-sm font-semibold capitalize mt-0.5 ${
+                    currentDetailTicket.status === 'resolved' || currentDetailTicket.status === 'addressed'
+                      ? 'text-emerald-700'
+                      : currentDetailTicket.status === 'in_progress' || currentDetailTicket.status === 'investigating'
+                      ? 'text-amber-700'
+                      : 'text-slate-700'
+                  }`}>
+                    {currentDetailTicket.status.replace('_', ' ')}
+                  </div>
                 </div>
               </div>
 
-              {/* Progress Stepper */}
-              <div>
-                <div className="text-xs font-bold text-slate-700 mb-3 uppercase tracking-wider">
-                  Live Resolution Progress Tracker
-                </div>
-
-                <div className="grid grid-cols-4 gap-2 text-center relative">
-                  {['Submitted', 'Acknowledged', 'In Progress', 'Resolved'].map((step, idx) => {
-                    const currentIdx = getStatusStepIndex(currentDetailTicket.status);
-                    const isCompleted = idx <= currentIdx;
-                    const isCurrent = idx === currentIdx;
-
+              {/* 4-Stage Lifecycle Stepper */}
+              <div className="space-y-3">
+                <span className="text-xs font-semibold text-slate-800 uppercase tracking-wider">
+                  Resolution Progress Pipeline
+                </span>
+                
+                <div className="grid grid-cols-4 gap-2">
+                  {[
+                    { step: 0, label: 'Submitted', desc: 'Registered in queue' },
+                    { step: 1, label: 'Investigating', desc: 'Officer assigned' },
+                    { step: 2, label: 'In Remediation', desc: 'Action in progress' },
+                    { step: 3, label: 'Resolved', desc: 'Officially closed' }
+                  ].map((s) => {
+                    const isCompleted = currentStepIndex >= s.step;
+                    const isCurrent = currentStepIndex === s.step;
                     return (
-                      <div key={step} className="space-y-1.5 flex flex-col items-center">
-                        <div
-                          className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-all ${
-                            isCompleted
-                              ? 'bg-emerald-600 text-white shadow-xs'
-                              : 'bg-slate-100 text-slate-400 border border-slate-200'
-                          }`}
-                        >
-                          {isCompleted ? <CheckCircle2 className="w-4 h-4" /> : idx + 1}
+                      <div
+                        key={s.step}
+                        className={`p-3 rounded-xl border transition-all ${
+                          isCurrent
+                            ? 'bg-slate-900 text-white border-slate-900 shadow-2xs'
+                            : isCompleted
+                            ? 'bg-emerald-50/60 border-emerald-200 text-emerald-950'
+                            : 'bg-slate-50 border-slate-200/60 text-slate-400'
+                        }`}
+                      >
+                        <div className="flex items-center justify-between mb-1">
+                          <span className={`text-[10px] font-mono-numbers font-semibold ${isCurrent ? 'text-indigo-300' : isCompleted ? 'text-emerald-700' : 'text-slate-400'}`}>
+                            Phase 0{s.step + 1}
+                          </span>
+                          {isCompleted && !isCurrent && (
+                            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                          )}
                         </div>
-                        <div
-                          className={`text-[11px] font-medium leading-tight ${
-                            isCurrent ? 'text-indigo-600 font-bold' : isCompleted ? 'text-slate-800' : 'text-slate-400'
-                          }`}
-                        >
-                          {step}
+                        <div className={`font-semibold text-xs ${isCurrent ? 'text-white' : isCompleted ? 'text-slate-900' : 'text-slate-500'}`}>
+                          {s.label}
+                        </div>
+                        <div className={`text-[10px] mt-0.5 line-clamp-1 ${isCurrent ? 'text-slate-300' : 'text-slate-500'}`}>
+                          {s.desc}
                         </div>
                       </div>
                     );
@@ -319,84 +289,194 @@ export const TrackIssueView: React.FC<TrackIssueViewProps> = ({
                 </div>
               </div>
 
-              {/* Detailed Description */}
-              <div className="space-y-2 bg-slate-50/80 p-4 rounded-xl border border-slate-200/70 text-xs">
-                <div className="font-bold text-slate-900">Reported Student Statement:</div>
-                <p className="text-slate-700 leading-relaxed">
-                  {currentDetailTicket.areasForImprovement || currentDetailTicket.strengths}
-                </p>
-                {currentDetailTicket.additionalComments && (
-                  <p className="text-slate-500 italic pt-1 border-t border-slate-200/50">
-                    "{currentDetailTicket.additionalComments}"
-                  </p>
-                )}
-              </div>
-
-              {/* Official Resolution Box */}
-              {currentDetailTicket.adminResponse ? (
-                <div className="bg-emerald-50/80 rounded-xl border border-emerald-300 p-4 text-xs space-y-2">
-                  <div className="flex items-center justify-between font-bold text-emerald-900 border-b border-emerald-200/60 pb-2">
-                    <span className="flex items-center gap-1.5">
-                      <FileCheck2 className="w-4 h-4 text-emerald-700" />
-                      Official Institutional Action Taken
-                    </span>
-                    <span className="text-[11px] font-medium text-emerald-800">
-                      Resolved {new Date(currentDetailTicket.adminResponse.resolvedAt).toLocaleDateString()}
-                    </span>
+              {/* Official Resolution Card (if resolved or action taken) */}
+              {(currentDetailTicket.adminResponse || currentDetailTicket.facultyNotes) && (
+                <div className="bg-emerald-50/50 border border-emerald-200/80 rounded-xl p-4 sm:p-5 space-y-3">
+                  <div className="flex items-center gap-2 text-emerald-800 font-semibold text-xs uppercase tracking-wider">
+                    <FileCheck2 className="w-4 h-4 text-emerald-600" />
+                    <span>Official Institutional Response & Action Taken</span>
                   </div>
+                  
+                  {currentDetailTicket.adminResponse?.actionTaken && (
+                    <div>
+                      <div className="text-xs text-slate-500">Remediation Action:</div>
+                      <div className="text-xs sm:text-sm font-semibold text-slate-900 mt-0.5">
+                        {currentDetailTicket.adminResponse.actionTaken}
+                      </div>
+                    </div>
+                  )}
 
-                  <p className="text-emerald-950 font-medium leading-relaxed">
-                    {currentDetailTicket.adminResponse.actionTaken}
-                  </p>
+                  {(currentDetailTicket.adminResponse?.officialNotes || currentDetailTicket.facultyNotes) && (
+                    <div>
+                      <div className="text-xs text-slate-500">Official Remarks & Notes:</div>
+                      <div className="text-xs text-slate-700 mt-0.5 leading-relaxed bg-white/80 p-3 rounded-lg border border-emerald-100">
+                        {currentDetailTicket.adminResponse?.officialNotes || currentDetailTicket.facultyNotes}
+                      </div>
+                    </div>
+                  )}
 
-                  <div className="pt-2 text-[11px] text-emerald-800 flex items-center justify-between">
-                    <span><strong>Signed off by:</strong> {currentDetailTicket.adminResponse.resolvedBy}</span>
-                    {currentDetailTicket.adminResponse.officialNotes && (
-                      <span className="italic">{currentDetailTicket.adminResponse.officialNotes}</span>
-                    )}
+                  <div className="pt-2 border-t border-emerald-100 flex flex-wrap items-center justify-between gap-2 text-xs text-emerald-900">
+                    <div className="flex items-center gap-2">
+                      <UserCheck className="w-3.5 h-3.5 text-emerald-600" />
+                      <span>Signed by: <strong>{currentDetailTicket.adminResponse?.resolvedBy || currentDetailTicket.assignedTo || 'Office of the Vice President'}</strong></span>
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={() => onVoteHelpful(currentDetailTicket.id)}
+                      className="px-2.5 py-1 rounded-md bg-white border border-emerald-200 text-emerald-800 font-medium text-xs hover:bg-emerald-100/50 transition-colors inline-flex items-center gap-1.5 cursor-pointer shadow-2xs"
+                    >
+                      <ThumbsUp className="w-3 h-3 text-emerald-600" />
+                      <span>Resolution Helpful ({currentDetailTicket.helpfulCount || 0})</span>
+                    </button>
                   </div>
-                </div>
-              ) : (
-                <div className="bg-amber-50/70 rounded-xl border border-amber-200 p-4 text-xs space-y-1">
-                  <div className="font-bold text-amber-900 flex items-center gap-1.5">
-                    <Clock className="w-4 h-4 text-amber-600" />
-                    Investigation & Remediation in Progress
-                  </div>
-                  <p className="text-amber-800 leading-relaxed">
-                    This item has been assigned to <strong>{currentDetailTicket.assignedTo || currentDetailTicket.department || 'the administrative team'}</strong>. Standard resolution time is typically 24-48 business hours. Check back for official completion notes.
-                  </p>
                 </div>
               )}
 
-              {/* Action and Upvote Footer */}
-              <div className="pt-2 border-t border-slate-100 flex items-center justify-between gap-3 text-xs">
-                <div className="text-slate-500 flex items-center gap-1">
-                  <span>Student Submitter:</span>
-                  <strong className="text-slate-800">
-                    {currentDetailTicket.isAnonymous ? 'Anonymous' : (currentDetailTicket.studentName || 'Student')}
-                  </strong>
+              {/* Student Report Content */}
+              <div className="space-y-3 pt-2 border-t border-slate-100 text-xs">
+                <div>
+                  <span className="font-semibold text-slate-800">Submitted Observations / Details:</span>
+                  <p className="mt-1 text-slate-700 leading-relaxed bg-slate-50 p-3.5 rounded-xl border border-slate-200/60">
+                    {currentDetailTicket.areasForImprovement || currentDetailTicket.strengths}
+                  </p>
                 </div>
 
-                <button
-                  type="button"
-                  onClick={() => onVoteHelpful(currentDetailTicket.id)}
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-slate-200 hover:bg-slate-100 text-slate-700 font-medium transition-colors"
-                >
-                  <ThumbsUp className="w-3.5 h-3.5 text-indigo-600" />
-                  <span>I also experience this ({currentDetailTicket.helpfulCount || 0})</span>
-                </button>
+                {currentDetailTicket.additionalComments && (
+                  <div>
+                    <span className="font-semibold text-slate-800">Additional Context:</span>
+                    <p className="mt-1 text-slate-600 leading-relaxed bg-slate-50 p-3 rounded-xl border border-slate-200/60">
+                      {currentDetailTicket.additionalComments}
+                    </p>
+                  </div>
+                )}
+
+                {/* Tags */}
+                {currentDetailTicket.selectedTags && currentDetailTicket.selectedTags.length > 0 && (
+                  <div className="flex flex-wrap items-center gap-1.5 pt-2">
+                    <span className="text-slate-500">Related Tags:</span>
+                    {currentDetailTicket.selectedTags.map((t) => (
+                      <span key={t} className="text-slate-700 bg-slate-100 px-2 py-0.5 rounded text-[11px]">
+                        {t}
+                      </span>
+                    ))}
+                  </div>
+                )}
               </div>
 
             </div>
           ) : (
-            <div className="bg-white rounded-2xl border border-slate-200 p-12 text-center">
-              <HelpCircle className="w-8 h-8 text-slate-400 mx-auto mb-2" />
-              <div className="text-sm font-semibold text-slate-900">No ticket selected</div>
-              <p className="text-xs text-slate-500 mt-1">
-                Select a ticket from the left column or search by ticket code above.
-              </p>
+            <div className="p-12 text-center bg-white rounded-2xl border border-slate-200/90 text-slate-500">
+              <Search className="w-8 h-8 text-slate-300 mx-auto mb-2" />
+              <p className="font-medium text-sm text-slate-700">No ticket found with that identifier.</p>
+              <p className="text-xs text-slate-500 mt-1">Check the code format (e.g. TCC-2024-8192) or choose a ticket from the queue.</p>
             </div>
           )}
+        </div>
+
+        {/* Right: Trackable Queue Sidebar (4 cols) */}
+        <div className="lg:col-span-4 space-y-4">
+          <div className="bg-white rounded-2xl border border-slate-200/90 shadow-2xs p-5 space-y-4">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+              <div>
+                <h3 className="font-semibold text-sm text-slate-900">
+                  Institutional Ticket Queue
+                </h3>
+                <span className="text-xs text-slate-500">
+                  {trackableList.length} tickets matching filters
+                </span>
+              </div>
+            </div>
+
+            {/* Filter controls */}
+            <div className="space-y-2">
+              <div className="flex items-center gap-2">
+                <select
+                  value={selectedCategory}
+                  onChange={(e) => setSelectedCategory(e.target.value)}
+                  className="w-1/2 text-xs py-1.5 px-2 rounded-lg border border-slate-200 bg-white text-slate-800 focus:outline-none focus:ring-1 focus:ring-slate-900"
+                >
+                  <option value="all">All Domains</option>
+                  <option value="academics">Academics</option>
+                  <option value="facilities">Facilities</option>
+                  <option value="services">Services</option>
+                  <option value="activities">Student Affairs</option>
+                </select>
+
+                <select
+                  value={selectedStatusFilter}
+                  onChange={(e) => setSelectedStatusFilter(e.target.value)}
+                  className="w-1/2 text-xs py-1.5 px-2 rounded-lg border border-slate-200 bg-white text-slate-800 focus:outline-none focus:ring-1 focus:ring-slate-900"
+                >
+                  <option value="all">All States</option>
+                  <option value="pending">Pending</option>
+                  <option value="investigating">Investigating</option>
+                  <option value="in_progress">In Progress</option>
+                  <option value="resolved">Resolved</option>
+                </select>
+              </div>
+            </div>
+
+            {/* Ticket items scroll list */}
+            <div className="space-y-2 max-h-[550px] overflow-y-auto pr-1">
+              {trackableList.map((ticket) => {
+                const isSelected = (currentDetailTicket?.id === ticket.id);
+                return (
+                  <button
+                    key={ticket.id}
+                    type="button"
+                    onClick={() => {
+                      setActiveTicketId(ticket.id);
+                      setSearchTicket(ticket.ticketNumber || ticket.id);
+                    }}
+                    className={`w-full text-left p-3 rounded-xl border transition-all cursor-pointer ${
+                      isSelected
+                        ? 'border-slate-900 bg-slate-900 text-white shadow-2xs'
+                        : 'border-slate-200/80 bg-white hover:bg-slate-50 text-slate-800'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between text-[11px] mb-1">
+                      <span className={`font-mono-numbers font-semibold ${isSelected ? 'text-indigo-300' : 'text-slate-900'}`}>
+                        {ticket.ticketNumber || ticket.id}
+                      </span>
+                      <span className={`capitalize ${
+                        ticket.status === 'resolved' || ticket.status === 'addressed'
+                          ? isSelected ? 'text-emerald-300' : 'text-emerald-700'
+                          : isSelected ? 'text-amber-300' : 'text-amber-700'
+                      }`}>
+                        {ticket.status.replace('_', ' ')}
+                      </span>
+                    </div>
+
+                    <div className={`font-semibold text-xs line-clamp-1 ${isSelected ? 'text-white' : 'text-slate-900'}`}>
+                      {ticket.title || ticket.strengths}
+                    </div>
+
+                    <div className={`flex items-center gap-2 text-[10px] mt-1 ${isSelected ? 'text-slate-300' : 'text-slate-500'}`}>
+                      <span>{ticket.department || 'Academic Affairs'}</span>
+                      <span aria-hidden="true">·</span>
+                      <span className="font-mono-numbers">
+                        {new Date(ticket.timestamp).toLocaleDateString()}
+                      </span>
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Quick Submit link */}
+            <div className="pt-3 border-t border-slate-100">
+              <button
+                type="button"
+                onClick={onNavigateToSubmit}
+                className="w-full py-2 px-3 rounded-lg border border-slate-200 text-xs font-semibold text-slate-800 hover:bg-slate-50 transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
+              >
+                <span>Submit New Feedback</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </button>
+            </div>
+
+          </div>
         </div>
 
       </div>

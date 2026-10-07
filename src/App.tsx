@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { Course, FeedbackSubmission, NavigationTab, UserRole, TicketStatus } from './types';
+import { Course, FeedbackSubmission, NavigationTab, UserRole, TicketStatus, TicketPriority } from './types';
 import { loadCourses, saveCourses, loadFeedbacks, saveFeedbacks, resetToDemoData } from './utils/storage';
 import { Navbar } from './components/Navbar';
 import { StudentFeedbackForm } from './components/StudentFeedbackForm';
@@ -83,7 +83,9 @@ export default function App() {
       actionTaken: string;
       resolvedBy: string;
       officialNotes?: string;
-    }
+    },
+    assignedTo?: string,
+    priority?: TicketPriority
   ) => {
     const now = new Date().toISOString();
     const updated = feedbacks.map((fb) => {
@@ -97,12 +99,14 @@ export default function App() {
           type: status === 'resolved' || status === 'addressed' ? 'resolution' : 'status_change',
           status,
           note: notes || (adminAction ? adminAction.actionTaken : `Status updated to ${status}`),
-          actor: adminAction?.resolvedBy || 'Administrator / Faculty'
+          actor: adminAction?.resolvedBy || assignedTo || 'Administrator / Faculty'
         });
 
         return {
           ...fb,
           status,
+          assignedTo: assignedTo !== undefined ? assignedTo : fb.assignedTo,
+          priority: priority !== undefined ? priority : fb.priority,
           facultyNotes: notes !== undefined ? notes : fb.facultyNotes,
           adminResponse: adminAction
             ? {
