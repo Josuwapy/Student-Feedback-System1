@@ -6,9 +6,9 @@
   "scripts": {
     "dev": "vite --port=3000 --host=0.0.0.0",
     "build": "vite build",
-    "start": "vite preview --host 0.0.0.0 --port ${PORT:-3000}",
+    "start": "node server.js",
     "preview": "vite preview",
-    "clean": "rm -rf dist server.js",
+    "clean": "rm -rf dist",
     "lint": "tsc --noEmit"
   },
   "dependencies": {

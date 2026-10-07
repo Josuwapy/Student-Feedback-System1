@@ -79,24 +79,28 @@ This application provides a multi-role platform for students, faculty members, a
 
 ---
 
-## 🌐 Deploy to Render (render.com)
+## 🌐 Deploy to Render (render.com) as a Web Service
 
-This app is configured for instant deployment on [Render](https://render.com):
+This app is configured for instant deployment as a **Render Web Service**:
 
-### Quick Method (Static Site — 100% Free):
+### Step-by-Step Render Web Service Setup:
 1. Log in to [dashboard.render.com](https://dashboard.render.com).
-2. Click **New +** > **Static Site**.
-3. Connect your GitHub account and select your repository.
-4. Set the following fields:
+2. Click **New +** > **Web Service**.
+3. Connect your GitHub repository (`Josuwapy/Student-Feedback-System`).
+4. Configure the service settings:
    - **Name**: `tcc-student-feedback` (or your choice)
+   - **Region**: Singapore / Oregon (or closest to your users)
    - **Branch**: `main`
+   - **Root Directory**: leave blank (defaults to root)
+   - **Runtime**: `Node`
    - **Build Command**: `npm install && npm run build`
-   - **Publish Directory**: `dist`
-5. Under **Redirects/Rewrites**:
-   - Add rule: `/*` -> `/index.html` (Rewrite)
-6. Click **Create Static Site**.
+   - **Start Command**: `npm start`
+   - **Instance Type**: `Free`
+5. Click **Deploy Web Service** (or **Create Web Service**).
 
-Your application will be live in 1-2 minutes with a free HTTPS `.onrender.com` URL!
+*Note: The included `render.yaml` blueprint will also auto-fill these settings if you select **New +** > **Blueprint**.*
+
+Render will automatically build your app and host it on your custom `.onrender.com` URL with free SSL/HTTPS!
 
 ---
 
