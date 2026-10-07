@@ -1,0 +1,6 @@
+{
+  "name": "Student Feedback System",
+  "description": "Online student feedback and issue resolution portal for Torres Capitol College (philcountryville.com) in Maramag, Bukidnon. Voice concerns, evaluate courses, and track campus services.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
