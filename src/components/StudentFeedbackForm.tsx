@@ -31,6 +31,7 @@ import {
 import { Course, EvaluationCriteria, FeedbackSubmission, FeedbackCategory, FeedbackNature, TicketPriority } from '../types';
 import { EVALUATION_CRITERIA, FEEDBACK_TAGS, CAMPUS_DEPARTMENTS } from '../data/initialData';
 import { StarRating } from './StarRating';
+import studentCollabImg from '../assets/images/student_study_collaboration_1791375662629.jpg';
 
 interface StudentFeedbackFormProps {
   courses: Course[];
@@ -314,9 +315,16 @@ export const StudentFeedbackForm: React.FC<StudentFeedbackFormProps> = ({
       <div className="rounded-2xl border border-slate-200/90 bg-white overflow-hidden shadow-2xs">
         <div className="relative h-44 sm:h-52 w-full overflow-hidden bg-slate-900">
           <img
-            src="/src/assets/images/student_study_collaboration_1791375662629.jpg"
+            src={studentCollabImg}
             alt="Students collaborating at Torres Capitol College"
+            loading="eager"
             referrerPolicy="no-referrer"
+            onError={(e) => {
+              const target = e.currentTarget;
+              if (target.src !== '/images/student_study_collaboration.jpg') {
+                target.src = '/images/student_study_collaboration.jpg';
+              }
+            }}
             className="w-full h-full object-cover object-center brightness-90 contrast-105"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/40 to-transparent" />

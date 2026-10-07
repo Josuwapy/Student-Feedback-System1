@@ -11,7 +11,11 @@ const HOST = '0.0.0.0';
 
 // Serve static assets from Vite build directory
 const distPath = path.join(__dirname, 'dist');
-app.use(express.static(distPath));
+app.use(express.static(distPath, { maxAge: '1d' }));
+
+// Also serve public and src/assets for direct or legacy image URLs
+app.use('/images', express.static(path.join(__dirname, 'public', 'images')));
+app.use('/src/assets', express.static(path.join(__dirname, 'src', 'assets')));
 
 // Health check endpoint for Render
 app.get('/healthz', (_req, res) => {

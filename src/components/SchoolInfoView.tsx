@@ -18,6 +18,7 @@ import {
   Briefcase
 } from 'lucide-react';
 import { CAMPUS_DEPARTMENTS, COURSES } from '../data/initialData';
+import tccCampusQuadImg from '../assets/images/tcc_campus_quad_1791375651163.jpg';
 
 interface SchoolInfoViewProps {
   onNavigateToFeedback: () => void;
@@ -35,9 +36,16 @@ export const SchoolInfoView: React.FC<SchoolInfoViewProps> = ({
       <div className="rounded-2xl border border-slate-200/90 bg-white overflow-hidden shadow-2xs">
         <div className="relative h-60 sm:h-72 w-full overflow-hidden bg-slate-900">
           <img
-            src="/src/assets/images/tcc_campus_quad_1791375651163.jpg"
+            src={tccCampusQuadImg}
             alt="Torres Capitol College Campus Academic Hall and Quadrangle"
+            loading="eager"
             referrerPolicy="no-referrer"
+            onError={(e) => {
+              const target = e.currentTarget;
+              if (target.src !== '/images/tcc_campus_quad.jpg') {
+                target.src = '/images/tcc_campus_quad.jpg';
+              }
+            }}
             className="w-full h-full object-cover object-center brightness-95 contrast-105"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/40 to-transparent" />
