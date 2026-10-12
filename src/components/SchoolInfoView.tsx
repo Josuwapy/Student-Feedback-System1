@@ -15,7 +15,10 @@ import {
   ArrowRight,
   CheckCircle2,
   Clock,
-  Briefcase
+  Briefcase,
+  FileText,
+  Download,
+  Printer
 } from 'lucide-react';
 import { CAMPUS_DEPARTMENTS, COURSES } from '../data/initialData';
 import tccCampusQuadImg from '../assets/images/tcc_campus_quad_1791375651163.jpg';
@@ -23,11 +26,13 @@ import tccCampusQuadImg from '../assets/images/tcc_campus_quad_1791375651163.jpg
 interface SchoolInfoViewProps {
   onNavigateToFeedback: () => void;
   onNavigateToCourse: (courseId: string) => void;
+  onOpenResearchPaper?: () => void;
 }
 
 export const SchoolInfoView: React.FC<SchoolInfoViewProps> = ({
   onNavigateToFeedback,
-  onNavigateToCourse
+  onNavigateToCourse,
+  onOpenResearchPaper
 }) => {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8 animate-in fade-in duration-200">
@@ -243,6 +248,110 @@ export const SchoolInfoView: React.FC<SchoolInfoViewProps> = ({
               </div>
             </div>
           ))}
+        </div>
+      </div>
+
+      {/* Academic Research Paper & Capstone Documentation Section */}
+      <div className="bg-gradient-to-br from-slate-900 via-slate-950 to-indigo-950 rounded-2xl p-6 sm:p-8 text-white shadow-sm border border-slate-800 space-y-6">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/10 pb-5">
+          <div className="space-y-1.5">
+            <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-md bg-amber-400/20 text-amber-300 text-xs font-semibold uppercase tracking-wider">
+              <FileText className="w-3.5 h-3.5" />
+              <span>Capstone Project & Research Publication</span>
+            </div>
+            <h2 className="font-display text-xl sm:text-2xl font-bold text-white tracking-tight">
+              Academic Research Paper Files
+            </h2>
+            <p className="text-xs sm:text-sm text-slate-300 max-w-2xl leading-relaxed">
+              "Development and Implementation of a Web-Based Student Feedback and Resolution Tracking System for Torres Capitol College" — Complete 5-Chapter manuscript evaluated under ISO/IEC 25010 (Grand Mean = 4.88).
+            </p>
+          </div>
+
+          {onOpenResearchPaper && (
+            <button
+              type="button"
+              onClick={onOpenResearchPaper}
+              className="px-4 py-2.5 rounded-xl bg-white text-slate-900 hover:bg-slate-100 font-semibold text-xs inline-flex items-center gap-2 transition-all shadow-sm shrink-0 cursor-pointer"
+            >
+              <FileText className="w-4 h-4 text-indigo-700" />
+              <span>Open Paper Hub</span>
+            </button>
+          )}
+        </div>
+
+        {/* Download Buttons Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          {/* Word Document */}
+          <a
+            href="/Torres_Capitol_College_Student_Feedback_System_Research_Paper.doc"
+            download="Torres_Capitol_College_Student_Feedback_System_Research_Paper.doc"
+            className="p-4 rounded-xl bg-white/5 border border-white/10 hover:border-blue-400/50 hover:bg-white/10 transition-all flex flex-col justify-between gap-3 group text-left"
+          >
+            <div className="flex items-center justify-between">
+              <span className="w-8 h-8 rounded-lg bg-blue-500/20 text-blue-300 flex items-center justify-center font-bold text-xs">
+                DOC
+              </span>
+              <Download className="w-4 h-4 text-slate-400 group-hover:text-white transition-colors" />
+            </div>
+            <div>
+              <div className="font-semibold text-white text-xs sm:text-sm">
+                Word Document (.doc)
+              </div>
+              <div className="text-[11px] text-slate-400 mt-0.5">
+                Full 5-chapter paper formatted for MS Word & Google Docs
+              </div>
+            </div>
+          </a>
+
+          {/* Markdown File */}
+          <a
+            href="/Torres_Capitol_College_Student_Feedback_System_Research_Paper.md"
+            download="Torres_Capitol_College_Student_Feedback_System_Research_Paper.md"
+            className="p-4 rounded-xl bg-white/5 border border-white/10 hover:border-slate-400/50 hover:bg-white/10 transition-all flex flex-col justify-between gap-3 group text-left"
+          >
+            <div className="flex items-center justify-between">
+              <span className="w-8 h-8 rounded-lg bg-slate-500/20 text-slate-300 flex items-center justify-center font-bold text-xs">
+                MD
+              </span>
+              <Download className="w-4 h-4 text-slate-400 group-hover:text-white transition-colors" />
+            </div>
+            <div>
+              <div className="font-semibold text-white text-xs sm:text-sm">
+                Markdown Source (.md)
+              </div>
+              <div className="text-[11px] text-slate-400 mt-0.5">
+                Plain-text raw manuscript for repository and Git
+              </div>
+            </div>
+          </a>
+
+          {/* HTML / Print View */}
+          <a
+            href="/RESEARCH_PAPER.html"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="p-4 rounded-xl bg-white/5 border border-white/10 hover:border-emerald-400/50 hover:bg-white/10 transition-all flex flex-col justify-between gap-3 group text-left"
+          >
+            <div className="flex items-center justify-between">
+              <span className="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-300 flex items-center justify-center font-bold text-xs">
+                PDF
+              </span>
+              <Printer className="w-4 h-4 text-slate-400 group-hover:text-white transition-colors" />
+            </div>
+            <div>
+              <div className="font-semibold text-white text-xs sm:text-sm">
+                Print & Save as PDF
+              </div>
+              <div className="text-[11px] text-slate-400 mt-0.5">
+                Opens print view — press Ctrl+P / Cmd+P to export PDF
+              </div>
+            </div>
+          </a>
+        </div>
+
+        <div className="text-[11px] text-slate-400 flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-white/10">
+          <span>Author: <strong>Joshua Entrina</strong> · Torres Capitol College, Maramag, Bukidnon</span>
+          <span>Includes Abstract, Chapters 1-5, ISO 25010 Results, and APA References</span>
         </div>
       </div>
 

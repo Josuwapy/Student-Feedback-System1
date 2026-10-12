@@ -9,7 +9,8 @@ import {
   BarChart3,
   BookOpen,
   Building2,
-  ShieldCheck
+  ShieldCheck,
+  FileText
 } from 'lucide-react';
 import { NavigationTab, UserRole } from '../types';
 
@@ -21,6 +22,7 @@ interface NavbarProps {
   onResetData: () => void;
   feedbackCount: number;
   pendingAdminCount?: number;
+  onOpenResearchPaper?: () => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -30,7 +32,8 @@ export const Navbar: React.FC<NavbarProps> = ({
   onToggleRole,
   onResetData,
   feedbackCount,
-  pendingAdminCount = 0
+  pendingAdminCount = 0,
+  onOpenResearchPaper
 }) => {
   return (
     <>
@@ -226,6 +229,19 @@ export const Navbar: React.FC<NavbarProps> = ({
                   Admin
                 </button>
               </div>
+
+              {/* Research Paper Download Button */}
+              {onOpenResearchPaper && (
+                <button
+                  type="button"
+                  onClick={onOpenResearchPaper}
+                  title="Download Research Paper & Capstone Docs"
+                  className="hidden lg:inline-flex items-center gap-1.5 text-xs text-indigo-700 bg-indigo-50/80 hover:bg-indigo-100/90 hover:text-indigo-950 px-2.5 py-1.5 rounded-lg border border-indigo-200/80 font-medium transition-colors cursor-pointer"
+                >
+                  <FileText className="w-3.5 h-3.5 text-indigo-600" />
+                  <span>Research Paper</span>
+                </button>
+              )}
 
               {/* Reset Data Button */}
               <button

@@ -9,7 +9,8 @@ import { CoursesDirectory } from './components/CoursesDirectory';
 import { AdminResolverView } from './components/AdminResolverView';
 import { TrackIssueView } from './components/TrackIssueView';
 import { SchoolInfoView } from './components/SchoolInfoView';
-import { CheckCircle2, Info } from 'lucide-react';
+import { ResearchPaperModal } from './components/ResearchPaperModal';
+import { CheckCircle2, Info, FileText } from 'lucide-react';
 
 export default function App() {
   const [courses, setCourses] = useState<Course[]>([]);
@@ -20,6 +21,7 @@ export default function App() {
   const [feedbackListCourseFilter, setFeedbackListCourseFilter] = useState<string>('all');
   const [activeTrackingTicket, setActiveTrackingTicket] = useState<string>('');
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [isResearchModalOpen, setIsResearchModalOpen] = useState(false);
 
   // Initialize data
   useEffect(() => {
@@ -202,6 +204,7 @@ export default function App() {
         onResetData={handleResetData}
         feedbackCount={feedbacks.length}
         pendingAdminCount={pendingAdminCount}
+        onOpenResearchPaper={() => setIsResearchModalOpen(true)}
       />
 
       {/* Toast Notification */}
@@ -276,6 +279,7 @@ export default function App() {
           <SchoolInfoView
             onNavigateToFeedback={() => setActiveTab('submit')}
             onNavigateToCourse={handleCourseToFeedback}
+            onOpenResearchPaper={() => setIsResearchModalOpen(true)}
           />
         )}
       </main>
@@ -297,13 +301,26 @@ export default function App() {
               philcountryville.com
             </a>
           </div>
-          <div className="flex items-center gap-4 text-slate-400">
-            <span>Confidential & Student-Protected Submissions</span>
+          <div className="flex items-center gap-4 text-slate-500">
+            <button
+              type="button"
+              onClick={() => setIsResearchModalOpen(true)}
+              className="inline-flex items-center gap-1.5 text-indigo-700 hover:text-indigo-900 font-semibold cursor-pointer underline"
+            >
+              <FileText className="w-3.5 h-3.5 text-indigo-600" />
+              <span>Download Research Paper (.doc / .md / PDF)</span>
+            </button>
             <span>•</span>
-            <span>Mobile & Desktop Responsive</span>
+            <span>Confidential & Student-Protected</span>
           </div>
         </div>
       </footer>
+
+      {/* Research Paper Download Modal */}
+      <ResearchPaperModal
+        isOpen={isResearchModalOpen}
+        onClose={() => setIsResearchModalOpen(false)}
+      />
     </div>
   );
 }

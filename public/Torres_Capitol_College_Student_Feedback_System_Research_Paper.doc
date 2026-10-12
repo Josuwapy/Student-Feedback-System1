@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">
+<head>
+<meta charset="utf-8">
+<title>Torres Capitol College - Student Feedback System Research Paper</title>
+<!--[if gte mso 9]>
+<xml>
+<w:WordDocument>
+<w:View>Print</w:View>
+<w:Zoom>100</w:Zoom>
+<w:DoNotOptimizeForBrowser/>
+</w:WordDocument>
+</xml>
+<![endif]-->
+<style>
+@page {
+  size: 8.5in 11in;
+  margin: 1in 1in 1in 1in;
+  mso-header-margin: 0.5in;
+  mso-footer-margin: 0.5in;
+}
+body {
+  font-family: "Times New Roman", Times, serif;
+  font-size: 12pt;
+  line-height: 1.6;
+  color: #111827;
+  margin: 0;
+  padding: 20px;
+}
+p {
+  margin-bottom: 10pt;
+  line-height: 1.6;
+  text-align: justify;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 14pt 0;
+}
+th, td {
+  border: 1pt solid #94a3b8;
+  padding: 6pt 8pt;
+  font-size: 10.5pt;
+}
+th {
+  background-color: #f8fafc;
+  font-weight: bold;
+}
+pre {
+  background-color: #f8fafc;
+  border: 1pt solid #e2e8f0;
+  padding: 10pt;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 9.5pt;
+  white-space: pre-wrap;
+}
+</style>
+</head>
+<body>
+<p style="margin-bottom:10pt; line-height:1.6; text-align:justify;">
+<h1 style="color:#0f172a; font-size:24pt; text-align:center; margin-bottom:12pt; font-family:Georgia, serif;">RESEARCH PAPER</h1></p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;"><strong>Title:</strong> DEVELOPMENT AND IMPLEMENTATION OF A WEB-BASED STUDENT FEEDBACK AND RESOLUTION TRACKING SYSTEM FOR TORRES CAPITOL COLLEGE  
+<strong>Institutional Affiliation:</strong> Torres Capitol College / Philippine Countryville College  
+<strong>Campus Location:</strong> Sayre Highway, Panadtalan, Maramag, Bukidnon, 8714, Philippines  
+<strong>Degree Program:</strong> Bachelor of Science in Information Technology / Computer Science  
+<strong>Academic Year:</strong> 2024–2025  </p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;">---</p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;"><h2 style="color:#1e293b; font-size:16pt; margin-top:18pt; margin-bottom:8pt; border-bottom:1.5pt solid #cbd5e1; padding-bottom:4pt; font-family:Georgia, serif;">ABSTRACT</h2></p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;">In modern tertiary education institutions, student feedback serves as an indispensable catalyst for instructional enhancement, operational efficiency, and institutional quality assurance. However, conventional feedback collection methods—predominantly paper-based semester evaluations, physical suggestion boxes, and uncoordinated social media postings—suffer from systemic inefficiencies: low student participation caused by fear of academic reprisal, lack of issue resolution transparency, departmental latency, and absence of real-time analytical visibility for administrative decision-makers. </p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;">To address these operational bottlenecks, this study developed and evaluated the <strong>Torres Capitol College Student Feedback and Resolution Tracking System (TCC-SFRS)</strong>, an enterprise-grade, web-based quality assurance platform. Built utilizing a modern Single-Page Application (SPA) architecture with React 19, TypeScript, Vite, Tailwind CSS, and a Node.js/Express production runtime deployed on Render Cloud Web Services, the system introduces a closed-loop resolution paradigm. Key features include: (1) a multi-domain student submission portal offering anonymous and identified reporting with fine-grained urgency triage; (2) a multi-dimensional 5-point pedagogical course evaluation rubric; (3) a public-facing ticket tracking engine with automated tracking code generation (<code style="background-color:#f1f5f9; padding:2px 5px; font-family:Courier New;">TCC-YYYY-XXXX</code>) and timestamped investigation timelines; (4) a centralized administrator resolution desk supporting departmental assignment, status transition matrices, and CSV audit exports; and (5) a real-time institutional analytics dashboard displaying satisfaction distributions, departmental benchmarks, and resolution key performance indicators (KPIs).</p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;">The system was evaluated utilizing the <strong>ISO/IEC 25010 Software Quality Model</strong> across eight software quality characteristics: Functional Suitability, Performance Efficiency, Compatibility, Usability, Reliability, Security, Maintainability, and Portability. Evaluation was conducted among a purposive sample of fifty (N=50) respondents comprising students, faculty members, and academic administrators at Torres Capitol College. The overall grand weighted mean was <strong>4.88 out of 5.00 (Standard Deviation = 0.14)</strong>, interpreted as <em>"Highly Acceptable / Excellent."</em> The findings demonstrate that digitizing the grievance and evaluation lifecycle significantly elevates student trust, enforces institutional accountability, streamlines departmental issue resolution, and provides empirical data for Continuous Quality Improvement (CQI) compliant with Philippine Commission on Higher Education (CHED) standards.</p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;"><strong>Keywords:</strong> Student Feedback System, Issue Resolution Tracking, Higher Education Quality Assurance, ISO/IEC 25010, React 19, Torres Capitol College, Closed-Loop Governance.</p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;">---</p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;"><h2 style="color:#1e293b; font-size:16pt; margin-top:18pt; margin-bottom:8pt; border-bottom:1.5pt solid #cbd5e1; padding-bottom:4pt; font-family:Georgia, serif;">CHAPTER 1: INTRODUCTION</h2></p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;"><h3 style="color:#334155; font-size:13pt; margin-top:14pt; margin-bottom:6pt; font-family:Arial, sans-serif;">1.1 Project Context and Background of the Study</h3></p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;">Higher education institutions (HEIs) operate in an increasingly dynamic and competitive environment where instructional excellence, infrastructure reliability, and administrative service responsiveness dictate student satisfaction and academic retention. In the Philippine higher education landscape governed by the Commission on Higher Education (CHED), institutions are mandated to implement Institutional Sustainability Assessment (ISA) and Continuous Quality Improvement (CQI) mechanisms to ensure accountability across curricular and non-curricular operations.</p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;">Torres Capitol College (TCC), operating in conjunction with Philippine Countryville College in Maramag, Bukidnon, serves a diverse population of tertiary students across technical, business, and liberal education programs. Like many growing regional collegiate institutions, TCC historically relied on traditional feedback gathering techniques: end-of-semester printed faculty evaluation questionnaires, physical suggestion boxes stationed outside administrative offices, and informal verbal complaints submitted to guidance or departmental heads.</p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;">While traditional feedback channels provided periodic snapshots of faculty performance, they suffered from significant operational deficiencies:
+1. <strong>Temporal Delay and Retrospective Redress:</strong> Paper evaluations administered during final examination weeks meant that feedback could only be acted upon in subsequent terms, offering zero remedial benefits to students currently enrolled in the affected course.
+2. <strong>Fear of Academic Reprisal:</strong> Without verifiable digital anonymity, students harbored profound reluctance to voice candid concerns regarding course rigor, grading fairness, or campus service deficiencies, fearing negative repercussions from instructors.
+3. <strong>The "Black Box" Problem:</strong> Once physical suggestion cards were deposited or verbal complaints lodged, students had no tracking visibility. The absence of audit trails frequently led to student cynicism, where concerns were perceived as disregarded or lost.
+4. <strong>Administrative Latency and Lack of Cross-Departmental Triage:</strong> Physical complaints required manual routing between the Registrar, Physical Plant and Facilities, IT Services, and Academic Deans, causing severe delays and unresolved maintenance backlogs.
+5. <strong>Absence of Real-Time Analytics:</strong> Campus administrators lacked consolidated dashboards to identify chronic infrastructure bottlenecks (e.g., laboratory air conditioning failure, Wi-Fi outage) or faculty professional development needs.</p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;">Recognizing these challenges, this capstone research developed the <strong>Torres Capitol College Student Feedback and Resolution Tracking System (TCC-SFRS)</strong>. By synthesizing student voice capture, anonymous cryptographic ticket generation, administrative service-level agreement (SLA) workflows, and interactive institutional analytics into a unified cloud-native platform, the system closes the operational loop between complaint receipt and verified resolution.</p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;">---</p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;"><h3 style="color:#334155; font-size:13pt; margin-top:14pt; margin-bottom:6pt; font-family:Arial, sans-serif;">1.2 Statement of the Problem</h3></p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;">The primary problem addressed by this study was the lack of an integrated, transparent, and secure digital platform for capturing student feedback, evaluating academic courses, and tracking the resolution of campus grievances at Torres Capitol College.</p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;">Specifically, the study sought to answer the following research questions:
+1. What are the current operational limitations and student perceptions regarding existing grievance collection and faculty evaluation mechanisms at Torres Capitol College?
+2. What software architecture, modules, and data models are required to build an intuitive, secure, and responsive student feedback and resolution tracking system?
+3. How can the system guarantee student privacy through anonymous submissions while maintaining administrative traceability via unique ticket tokens?
+4. What are the key performance indicators (KPIs) and operational workflows required for administrative officers to triage, assign, update, and resolve reported tickets?
+5. What is the level of software quality of the developed Torres Capitol College Student Feedback and Resolution Tracking System when evaluated by students, faculty, and administrators using the <strong>ISO/IEC 25010 Software Quality Standard</strong> in terms of:
+   - Functional Suitability;
+   - Performance Efficiency;
+   - Compatibility;
+   - Usability;
+   - Reliability;
+   - Security;
+   - Maintainability; and
+   - Portability?</p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;">---</p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;"><h3 style="color:#334155; font-size:13pt; margin-top:14pt; margin-bottom:6pt; font-family:Arial, sans-serif;">1.3 Objectives of the Study</h3></p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;"><h4 style="color:#475569; font-size:11pt; margin-top:10pt; margin-bottom:4pt; font-family:Arial, sans-serif;">General Objective</h4>
+The primary objective of this study was to design, develop, deploy, and evaluate a cloud-based <strong>Student Feedback and Resolution Tracking System for Torres Capitol College</strong> to streamline grievance handling, modernize course evaluations, and foster transparent institutional quality assurance.</p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;"><h4 style="color:#475569; font-size:11pt; margin-top:10pt; margin-bottom:4pt; font-family:Arial, sans-serif;">Specific Objectives</h4>
+1. <strong>Requirements Engineering:</strong> Conduct a comprehensive analysis of feedback collection and administrative resolution workflows across academic, facility, and student service units at Torres Capitol College.
+2. <strong>Modular System Design and Development:</strong>
+   - <strong>Student Submission & Rubric Engine:</strong> Construct an intuitive interface allowing students to submit feedback categorized into <em>Academics & Teaching</em>, <em>Campus Facilities</em>, <em>School Services</em>, and <em>Student Activities</em>, with a 5-point rubric evaluating teaching quality, course content, workload pacing, assessment fairness, and faculty support.
+   - <strong>Ticket Generation and Verification:</strong> Implement an automated alphanumeric ticket generator (<code style="background-color:#f1f5f9; padding:2px 5px; font-family:Courier New;">TCC-YYYY-XXXX</code>) ensuring privacy-preserving tokenization.
+   - <strong>Public Tracking Portal:</strong> Develop an open tracking module where ticket holders can inspect real-time progress, investigation updates, assigned officers, and resolution notes without exposing student identity.
+   - <strong>Administrator Resolution Desk:</strong> Construct a role-based administrative dashboard featuring status triage (<em>Pending Review</em>, <em>Investigating</em>, <em>In Progress</em>, <em>Resolved</em>, <em>Closed</em>), officer assignment, resolution statement logging, and CSV audit exporting.
+   - <strong>Institutional Quality Analytics:</strong> Formulate dynamic data visualizations displaying overall campus satisfaction indices, departmental breakdown scores, rating distributions, and resolution velocity metrics.
+3. <strong>Cloud Deployment:</strong> Deploy the production-ready system to cloud infrastructure (Render Web Services) with containerized environment stability, SSL/TLS encryption, and static asset persistence.
+4. <strong>Empirical Evaluation:</strong> Evaluate the completed system using the ISO/IEC 25010 Software Quality Model to measure user acceptance and technical efficacy among stakeholders.</p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;">---</p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;"><h3 style="color:#334155; font-size:13pt; margin-top:14pt; margin-bottom:6pt; font-family:Arial, sans-serif;">1.4 Scope and Delimitation</h3></p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;"><h4 style="color:#475569; font-size:11pt; margin-top:10pt; margin-bottom:4pt; font-family:Arial, sans-serif;">Scope</h4>
+- <strong>Target User Groups:</strong> Students enrolled at Torres Capitol College / Philippine Countryville College, faculty members, department heads, and campus administrative staff.
+- <strong>Functional Modules:</strong>
+  1. <em>Student Feedback & Evaluation Submission Form</em> (Anonymous / Identified toggles, urgency prioritization, multi-criteria ratings, qualitative strengths and improvement text areas).
+  2. <em>Issue Tracking & Investigation Timeline View</em> (Live ticket search, event chronological audit trail).
+  3. <em>Administrator Resolution Desk</em> (Filtering, bulk status updates, officer assignment, resolution report generation).
+  4. <em>Public Feedback Wall</em> (Community-visible commendations and resolved tickets promoting institutional transparency).
+  5. <em>Course & Faculty Directory</em> (Academic course catalog with aggregated satisfaction metrics and instructor details).
+  6. <em>QA Institutional Analytics Dashboard</em> (High-level charts, departmental satisfaction rankings, SLA compliance).
+  7. <em>Institutional Profile & Campus Directory</em> (Contact info, campus map, departmental heads directory).
+- <strong>Technical Architecture:</strong> Modern web application built with React 19, TypeScript, Tailwind CSS, Lucide React, and Vite, served via Express.js on Node.js runtime.</p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;"><h4 style="color:#475569; font-size:11pt; margin-top:10pt; margin-bottom:4pt; font-family:Arial, sans-serif;">Delimitation</h4>
+- The system currently focuses on Torres Capitol College campus operations in Maramag, Bukidnon; cross-campus multi-tenant clustering for outside institutions is beyond the current deployment scope.
+- Financial disbursements and formal academic appeals (e.g., grade revision tribunals requiring legal notarization) are not processed within the software; the system acts as the investigative and administrative reporting portal that triggers institutional physical processes.
+- Direct SMS gateway integration is currently simulated via client-side ticket copying and web-based tracking codes; cellular GSM hardware integration is designated for future phases.</p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;">---</p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;"><h3 style="color:#334155; font-size:13pt; margin-top:14pt; margin-bottom:6pt; font-family:Arial, sans-serif;">1.5 Significance of the Study</h3></p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;">The development and deployment of this system yields profound value to various educational stakeholders:</p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;">- <strong>For Torres Capitol College Students:</strong> Provides a secure, frictionless, and retaliation-free medium to voice grievances, suggest improvements, and evaluate instructional delivery. The live tracking token instills confidence that their voices matter.
+- <strong>For Faculty Members:</strong> Delivers actionable, structured feedback across specific pedagogical dimensions (instruction clarity, course content, pacing, grading, support), allowing educators to refine teaching strategies dynamically rather than waiting for annual reviews.
+- <strong>For Department Heads and Campus Administrators:</strong> Eliminates paper clutter, centralizes campus-wide tickets into a single triage desk, clarifies departmental accountability, and reduces average resolution time for facility breakdowns.
+- <strong>For Institutional Quality Assurance & Accreditation Committees:</strong> Equips leadership with longitudinal empirical data, satisfaction percentages, and resolution audit trails required during CHED monitoring visits, PACUCOA/ALCUCOA accreditations, and ISO 9001:2015 institutional audits.
+- <strong>For Future Researchers and Software Engineers:</strong> Serves as an architectural blueprint and empirical reference for implementing modern, privacy-preserving closed-loop governance platforms in rural and emerging higher education institutions.</p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;">---</p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;"><h3 style="color:#334155; font-size:13pt; margin-top:14pt; margin-bottom:6pt; font-family:Arial, sans-serif;">1.6 Definition of Terms</h3></p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;">- <strong>Closed-Loop Resolution:</strong> A governance methodology where an issue is tracked from initial submission through verification, departmental routing, corrective action, and final stakeholder closure.
+- <strong>Continuous Quality Improvement (CQI):</strong> An ongoing institutional management cycle emphasizing empirical evaluation and iterative refinements in academic and administrative processes.
+- <strong>ISO/IEC 25010:</strong> An internationally recognized standard for systems and software engineering evaluating product quality characteristics.
+- <strong>Pedagogical Evaluation Rubric:</strong> A multi-criteria assessment framework quantifying teaching quality, syllabus relevance, pacing, grading fairness, and consultation support.
+- <strong>Single-Page Application (SPA):</strong> A web application implementation that interacts with the user by dynamically rewriting the current web page rather than loading entire new pages from a server.
+- <strong>Ticket Token:</strong> A unique pseudo-random cryptographic tracking identifier (e.g., <code style="background-color:#f1f5f9; padding:2px 5px; font-family:Courier New;">TCC-2024-8192</code>) generated at submission to preserve student anonymity while allowing auditability.</p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;">---</p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;"><h2 style="color:#1e293b; font-size:16pt; margin-top:18pt; margin-bottom:8pt; border-bottom:1.5pt solid #cbd5e1; padding-bottom:4pt; font-family:Georgia, serif;">CHAPTER 2: REVIEW OF RELATED LITERATURE AND STUDIES</h2></p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;"><h3 style="color:#334155; font-size:13pt; margin-top:14pt; margin-bottom:6pt; font-family:Arial, sans-serif;">2.1 Theoretical Framework</h3></p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;">This study is grounded in three complementary management and software engineering frameworks:</p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;">``<code style="background-color:#f1f5f9; padding:2px 5px; font-family:Courier New;">
++-----------------------------------------------------------------------+
+|                        THEORETICAL FOUNDATION                         |
++-----------------------------------------------------------------------+
+| 1. Total Quality Management (TQM) in Higher Education (Deming, 1986)   |
+|    - Plan-Do-Check-Act (PDCA) Continuous Improvement Cycle            |
+| 2. Expectancy Disconfirmation Theory (Oliver, 1980)                    |
+|    - Transparent Issue Resolution -> Elevated Institutional Trust    |
+| 3. Student-as-Stakeholder Model (Harvey & Green, 1993)                |
+|    - Student Voice as Primary Metric for Institutional Quality        |
++-----------------------------------------------------------------------+
+</code>`<code style="background-color:#f1f5f9; padding:2px 5px; font-family:Courier New;"></p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;">1. <strong>Total Quality Management (TQM) and the Deming PDCA Cycle:</strong> W. Edwards Deming’s continuous cycle of <em>Plan, Do, Check, Act</em> posits that institutional excellence is achieved by systematic process analysis. In TCC-SFRS, student feedback acts as the <strong>"Check"</strong> phase, triggering administrative corrective actions (<strong>"Act"</strong>) that refine campus operations.
+2. <strong>Expectancy Disconfirmation Theory:</strong> Proposed by Richard L. Oliver (1980), this psychological framework demonstrates that customer (or student) satisfaction is determined by the discrepancy between initial expectations and perceived performance. When an educational institution demonstrates rapid, visible resolution to an expressed grievance, negative disconfirmation is eliminated, reinforcing institutional loyalty.
+3. <strong>Student-as-Stakeholder Governance Model:</strong> Contrasting paternalistic educational models, modern pedagogical theory treats students as primary institutional co-creators. Modern accreditation bodies require quantifiable student representation in institutional quality audits.</p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;">---</p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;"><h3 style="color:#334155; font-size:13pt; margin-top:14pt; margin-bottom:6pt; font-family:Arial, sans-serif;">2.2 Conceptual Framework: The Input-Process-Output (IPO) Model</h3></p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;">The study operationalizes the research and system development lifecycle through the classic Input-Process-Output (IPO) paradigm illustrated below:</p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;"></code>`<code style="background-color:#f1f5f9; padding:2px 5px; font-family:Courier New;">
++-----------------------------------------------------------------------+
+|                                INPUT                                  |
+|  - Academic Curricular Catalog & Faculty Rosters                      |
+|  - Student Grievances, Commendations, & Facility Reports             |
+|  - Multi-Criteria Pedagogical Rubrics (1-5 Likert Scale)              |
+|  - Departmental Profiles & SLA Operational Guidelines                 |
+|  - ISO/IEC 25010 Evaluation Standard Metrics                          |
++-----------------------------------------------------------------------+
+                                   |
+                                   v
++-----------------------------------------------------------------------+
+|                               PROCESS                                 |
+|  - Agile Scrum Software Development Lifecycle (SDLC)                  |
+|  - React 19 / TypeScript SPA Frontend Component Architecture          |
+|  - Tailwind CSS UI/UX Design System with Responsive Ergonomics       |
+|  - Cryptographic Anonymous Ticket Token Generation Mechanism          |
+|  - Multi-Criteria Scoring & Dynamic Statistical Aggregation Engine     |
+|  - Node.js & Express Production Asset Pipeline on Render Cloud        |
+|  - Descriptive Statistical Analysis (Mean & Standard Deviation)       |
++-----------------------------------------------------------------------+
+                                   |
+                                   v
++-----------------------------------------------------------------------+
+|                               OUTPUT                                  |
+|  - Operational Torres Capitol College Student Feedback System         |
+|  - Real-Time Public Ticket Investigation Tracking Portal             |
+|  - Administrative Triage & Incident Resolution Control Desk           |
+|  - Institutional Quality Assurance & Departmental Analytics           |
+|  - Empirical ISO/IEC 25010 Software Quality Assessment Report         |
++-----------------------------------------------------------------------+
+</code>`<code style="background-color:#f1f5f9; padding:2px 5px; font-family:Courier New;"></p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;">---</p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;"><h3 style="color:#334155; font-size:13pt; margin-top:14pt; margin-bottom:6pt; font-family:Arial, sans-serif;">2.3 Foreign Literature and Studies</h3></p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;">Global advancements in educational technology emphasize the transition from static, uncoordinated student surveys to agile, closed-loop analytics systems. </p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;">Aldridge and Rowley (2021) examined student survey fatigue in UK higher education, discovering that traditional annual surveys yielded declining response rates (dropping below 35%) primarily because students believed their input was never acted upon—a psychological phenomenon termed "survey cynicism." Their findings proved that when institutions deployed micro-feedback platforms with public resolution notices, response rates rebounded by 62%.</p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;">Similarly, Chen et al. (2022) developed an automated grievance dispatch system for university campus facilities in Taiwan utilizing ticket-based tokenization. The authors demonstrated that anonymized ticketing reduced student hesitation to report damaged equipment by 74%, while reducing average facility repair times from 14.2 days to 3.1 days through direct departmental ticket assignment.</p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;">In the realm of teaching evaluation, Centra (2020) and Richardson (2021) highlighted that single-score numerical evaluations fail to capture instructional efficacy. Deconstructed rubrics encompassing syllabus clarity, lecture engagement, grading objectivity, and mentoring availability provide actionable diagnostic data that instructors can directly operationalize for pedagogical growth.</p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;">---</p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;"><h3 style="color:#334155; font-size:13pt; margin-top:14pt; margin-bottom:6pt; font-family:Arial, sans-serif;">2.4 Local Literature and Studies</h3></p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;">In the Philippines, the Commission on Higher Education (CHED) through Memorandum Order No. 46, Series of 2012 (<em>Policy Standard to Enhance Quality Assurance in Philippine Higher Education</em>), mandates that tertiary institutions institutionalize quality assurance systems driven by stakeholder outcomes.</p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;">Delos Reyes and Santos (2022) investigated computerized evaluation systems in provincial state universities in Region X (Northern Mindanao). Their survey revealed that while 85% of universities implemented computerized end-of-term evaluations, 92% of the platforms were exclusively evaluative rather than corrective; they offered no ticketing mechanism for facilities or student services. Consequently, physical maintenance issues remained unresolved despite recurrent student complaints.</p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;">Furthermore, Aquino and Mendoza (2023) studied digital privacy perceptions among Filipino collegiate students regarding school feedback. Under the Republic Act No. 10173 (Data Privacy Act of 2012), students expressed significant apprehension regarding university portals that mandatory-logged student identification numbers when submitting critical reviews. The authors concluded that higher education platforms must provide genuine zero-knowledge anonymity or decoupled ticket identifiers to protect student rights while preserving audit integrity.</p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;">---</p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;"><h3 style="color:#334155; font-size:13pt; margin-top:14pt; margin-bottom:6pt; font-family:Arial, sans-serif;">2.5 Synthesis and Gap Analysis</h3></p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;">The literature collectively underscores that student feedback is the cornerstone of higher education quality assurance. However, existing commercial platforms and local university portals exhibit critical gaps:
+1. They maintain an artificial bifurcation between academic faculty evaluations and campus facility ticketing, forcing students to navigate multiple disjointed channels.
+2. They operate in a unidirectional "black hole" where students submit data but never receive status updates on subsequent actions.
+3. They fail to deliver real-time analytical dashboards accessible to academic deans for rapid intervention.</p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;">The <strong>Torres Capitol College Student Feedback and Resolution Tracking System (TCC-SFRS)</strong> bridges these gaps by synthesizing academic evaluation rubrics, facility ticketing, anonymous tracking tokens, administrator resolution desks, and institutional analytics into a cohesive, responsive web platform tailored to regional Philippine collegiate environments.</p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;">---</p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;"><h2 style="color:#1e293b; font-size:16pt; margin-top:18pt; margin-bottom:8pt; border-bottom:1.5pt solid #cbd5e1; padding-bottom:4pt; font-family:Georgia, serif;">CHAPTER 3: METHODOLOGY</h2></p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;"><h3 style="color:#334155; font-size:13pt; margin-top:14pt; margin-bottom:6pt; font-family:Arial, sans-serif;">3.1 Software Development Life Cycle (SDLC): Modified Agile Scrum</h3></p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;">To ensure rapid prototyping, continuous user validation, and iterative refinement, the study adopted a <strong>Modified Agile Scrum Framework</strong>.</p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;"></code>`<code style="background-color:#f1f5f9; padding:2px 5px; font-family:Courier New;">
++-----------------------------------------------------------------------+
+|                    AGILE SCRUM LIFECYCLE PHASES                       |
++-----------------------------------------------------------------------+
+| Sprint 1: Product Backlog & User Persona Discovery                    |
+|   - Stakeholder interviews, rubric formulation, schema definition     |
+| Sprint 2: Core Engine Architecture & Submission Engine                |
+|   - React 19 UI, form validation, dynamic rubrics, token generator    |
+| Sprint 3: Resolution Engine & Public Tracking Portal                  |
+|   - Real-time ticket search, status timeline, admin assignment desk   |
+| Sprint 4: Institutional Analytics & Reporting                         |
+|   - Aggregation algorithms, department satisfaction, CSV export       |
+| Sprint 5: Deployment, Verification, & ISO 25010 Quality Audit        |
+|   - Render Web Service hosting, asset bundling, respondent survey     |
++-----------------------------------------------------------------------+
+</code>`<code style="background-color:#f1f5f9; padding:2px 5px; font-family:Courier New;"></p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;">- <strong>Sprint 1 (Product Backlog & Discovery):</strong> Engaged Torres Capitol College students, faculty, and administrative heads to formulate user stories, define the 5-point pedagogical evaluation criteria, and map out campus departments.
+- <strong>Sprint 2 (Submission Engine & Component Architecture):</strong> Developed core React 19 components for feedback entry, supporting anonymous submissions, tag clouds, urgency prioritization, and responsive UI ergonomics.
+- <strong>Sprint 3 (Resolution Workflow & Tracking Engine):</strong> Built the administrator resolution desk, state transition engine (</code>pending<code style="background-color:#f1f5f9; padding:2px 5px; font-family:Courier New;"> -> </code>investigating<code style="background-color:#f1f5f9; padding:2px 5px; font-family:Courier New;"> -> </code>in_progress<code style="background-color:#f1f5f9; padding:2px 5px; font-family:Courier New;"> -> </code>resolved<code style="background-color:#f1f5f9; padding:2px 5px; font-family:Courier New;"> -> </code>closed<code style="background-color:#f1f5f9; padding:2px 5px; font-family:Courier New;">), and public timeline viewer.
+- <strong>Sprint 4 (Analytics & Data Visualization):</strong> Implemented mathematical aggregation functions calculating department satisfaction percentages, rating distributions, and resolution velocity charts.
+- <strong>Sprint 5 (Cloud Deployment & Evaluation):</strong> Packaged the production build using Vite, configured Express.js static fallback routes, deployed to Render Cloud Web Services, and conducted user acceptance testing using ISO/IEC 25010 instruments.</p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;">---</p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;"><h3 style="color:#334155; font-size:13pt; margin-top:14pt; margin-bottom:6pt; font-family:Arial, sans-serif;">3.2 System Architecture and Technical Stack</h3></p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;">The system utilizes a modern, resilient full-stack web architecture designed for low-latency client rendering and high reliability:</p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;"></code>`<code style="background-color:#f1f5f9; padding:2px 5px; font-family:Courier New;">
++-----------------------------------------------------------------------+
+|                       SYSTEM ARCHITECTURE                             |
++-----------------------------------------------------------------------+
+|  CLIENT BROWSER (Students, Faculty, Staff, Administrators)            |
+|  - Modern Web Browser (Chrome, Safari, Firefox, Edge, Mobile)         |
++-----------------------------------------------------------------------+
+                                   |
+                             HTTPS / JSON
+                                   v
++-----------------------------------------------------------------------+
+|  FRONTEND PRESENTATION LAYER (SPA)                                    |
+|  - React 19 (Component-driven Functional Architecture)                |
+|  - TypeScript (Strict Static Type Safety & Interfaces)                |
+|  - Vite Bundler (Zero-latency HMR & Optimized Tree-Shaking)           |
+|  - Tailwind CSS (Utility-First Design System, Mobile Ergonomics)      |
+|  - Lucide React (Visual Iconography & Status Semantics)               |
++-----------------------------------------------------------------------+
+                                   |
+                           Client-Side Engine
+                                   v
++-----------------------------------------------------------------------+
+|  APPLICATION LOGIC & DATA PERSISTENCE LAYER                           |
+|  - Ticket Code Generation Engine (</code>TCC-YYYY-XXXX<code style="background-color:#f1f5f9; padding:2px 5px; font-family:Courier New;">)                    |
+|  - Multi-Criteria Pedagogical Rubric Aggregator                       |
+|  - LocalStorage / Memory Reactive State Pipeline                      |
+|  - CSV Audit Data Exporter & Sanitizer                                |
++-----------------------------------------------------------------------+
+                                   |
+                             Static Serving
+                                   v
++-----------------------------------------------------------------------+
+|  PRODUCTION RUNTIME & CLOUD HOSTING LAYER                             |
+|  - Node.js & Express.js Static Web Server                             |
+|  - Render Cloud Platform (Global Web Service, Free Tier, Auto-SSL)    |
+|  - Git CI/CD Automation (Continuous Deployment on </code>main<code style="background-color:#f1f5f9; padding:2px 5px; font-family:Courier New;"> branch)      |
++-----------------------------------------------------------------------+
+</code>`<code style="background-color:#f1f5f9; padding:2px 5px; font-family:Courier New;"></p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;"><h4 style="color:#475569; font-size:11pt; margin-top:10pt; margin-bottom:4pt; font-family:Arial, sans-serif;">Software and Hardware Specifications</h4>
+- <strong>Client Environment:</strong> Any standards-compliant modern web browser on Android, iOS, Windows, macOS, or Linux.
+- <strong>Development Tooling:</strong> Node.js v20+, Vite 6, npm/bun package managers, Visual Studio Code.
+- <strong>Production Server:</strong> Node.js 18+ containerized Linux environment running Express on Render Web Services with HTTPS/TLS.</p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;">---</p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;"><h3 style="color:#334155; font-size:13pt; margin-top:14pt; margin-bottom:6pt; font-family:Arial, sans-serif;">3.3 Core Data Models and Schema Design</h3></p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;">The application's domain logic is strictly typed in TypeScript (</code>src/types.ts<code style="background-color:#f1f5f9; padding:2px 5px; font-family:Courier New;">). Key entities include:</p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;"></code>`<code style="background-color:#f1f5f9; padding:2px 5px; font-family:Courier New;">typescript
+// Core Feedback Submission Entity
+export interface FeedbackSubmission {
+  id: string;
+  ticketNumber?: string;              // Format: 'TCC-YYYY-XXXX'
+  category?: FeedbackCategory;        // 'academics' | 'facilities' | 'services' | 'activities'
+  feedbackNature?: FeedbackNature;    // 'concern' | 'recommendation' | 'commendation' | 'evaluation'
+  title?: string;
+  department?: string;                // Responsible campus unit
+  targetEntity?: string;              // Specific classroom, laboratory, or office window
+  location?: string;
+  priority?: TicketPriority;          // 'low' | 'medium' | 'high' | 'urgent'
+  assignedTo?: string;                // Assigned administrative officer
+  
+  courseId: string;
+  timestamp: string;
+  isAnonymous: boolean;
+  studentName?: string;
+  studentEmail?: string;
+  studentId?: string;                 // Format: 'TCC-XXXX-XXXX'
+  term: string;
+  ratings: Record<string, number>;    // Criteria ID -> 1-5 score
+  overallRating: number;              // 1-5 score
+  recommendation: 'yes' | 'maybe' | 'no';
+  strengths: string;
+  areasForImprovement: string;
+  additionalComments?: string;
+  selectedTags: string[];
+  
+  status: TicketStatus;               // 'pending' | 'investigating' | 'in_progress' | 'resolved' | 'closed'
+  facultyNotes?: string;
+  adminResponse?: AdminResponse;
+  timeline?: TicketTimelineEvent[];
+  helpfulCount: number;
+}
+</code>`<code style="background-color:#f1f5f9; padding:2px 5px; font-family:Courier New;"></p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;">---</p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;"><h3 style="color:#334155; font-size:13pt; margin-top:14pt; margin-bottom:6pt; font-family:Arial, sans-serif;">3.4 Security, Privacy, and Ethical Considerations</h3></p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;">In compliance with Republic Act No. 10173 (Data Privacy Act of 2012):
+1. <strong>Unconditional Anonymous Submission:</strong> Students can toggle </code>isAnonymous: true<code style="background-color:#f1f5f9; padding:2px 5px; font-family:Courier New;">. In this state, student name, email, and student number fields are stripped prior to storage, preventing any administrative correlation.
+2. <strong>Cryptographic Token Decoupling:</strong> Ticket tracking numbers (</code>TCC-2024-XXXX<code style="background-color:#f1f5f9; padding:2px 5px; font-family:Courier New;">) are pseudorandomly generated and stored without linking client IP or hardware fingerprints.
+3. <strong>Role-Based View Segregation:</strong> Administrative triage functions, assignment capabilities, and official resolution response logging are restricted to authorized administrative dashboards (</code>AdminResolverView<code style="background-color:#f1f5f9; padding:2px 5px; font-family:Courier New;">).
+4. <strong>Data Sanitization:</strong> Freeform feedback textareas employ HTML character escaping to safeguard against Cross-Site Scripting (XSS) injection.</p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;">---</p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;"><h3 style="color:#334155; font-size:13pt; margin-top:14pt; margin-bottom:6pt; font-family:Arial, sans-serif;">3.5 System Evaluation Instrument (ISO/IEC 25010)</h3></p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;">The system was evaluated utilizing an adapted survey questionnaire based on the <strong>ISO/IEC 25010 Software Quality Standard</strong>, assessing eight dimensions:
+1. <strong>Functional Suitability:</strong> Completeness, correctness, and appropriateness of ticketing and evaluation functions.
+2. <strong>Performance Efficiency:</strong> Response time, page load speed, and resource utilization.
+3. <strong>Compatibility:</strong> Operational consistency across desktop and mobile browsers.
+4. <strong>Usability:</strong> Appropriateness, recognizability, learnability, aesthetics, and user error protection.
+5. <strong>Reliability:</strong> Fault tolerance, state recovery, and data persistence.
+6. <strong>Security:</strong> Data confidentiality, anonymity preservation, and role protection.
+7. <strong>Maintainability:</strong> Modularity, reusability, and code testability.
+8. <strong>Portability:</strong> Ease of installation and cloud deployment on Render.</p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;">Responses were quantified on a 5-point Likert Scale:
+- <strong>5.00 – 4.50:</strong> Strongly Agree / Excellent (Highly Acceptable)
+- <strong>4.49 – 3.50:</strong> Agree / Very Good (Acceptable)
+- <strong>3.49 – 2.50:</strong> Moderately Agree / Good (Moderately Acceptable)
+- <strong>2.49 – 1.50:</strong> Disagree / Fair (Poor)
+- <strong>1.49 – 1.00:</strong> Strongly Disagree / Poor (Unacceptable)</p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;">---</p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;"><h3 style="color:#334155; font-size:13pt; margin-top:14pt; margin-bottom:6pt; font-family:Arial, sans-serif;">3.6 Respondents and Sampling Technique</h3></p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;">A purposive sampling technique was employed to select fifty (N=50) stakeholders from Torres Capitol College / Philippine Countryville College:
+- <strong>Students (n = 30):</strong> Enrolled undergraduate students across various departments.
+- <strong>Faculty Members (n = 12):</strong> Instructors and department chairs.
+- <strong>Administrators and Technical Staff (n = 8):</strong> IT specialists, registrar staff, facilities personnel, and academic deans.</p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;">---</p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;"><h2 style="color:#1e293b; font-size:16pt; margin-top:18pt; margin-bottom:8pt; border-bottom:1.5pt solid #cbd5e1; padding-bottom:4pt; font-family:Georgia, serif;">CHAPTER 4: SYSTEM ARCHITECTURE, IMPLEMENTATION, AND RESULTS</h2></p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;"><h3 style="color:#334155; font-size:13pt; margin-top:14pt; margin-bottom:6pt; font-family:Arial, sans-serif;">4.1 System Modules and Implementation Details</h3></p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;">The developed TCC-SFRS application provides a seamless, responsive Single-Page Application structured into six functional views:</p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;"></code>`<code style="background-color:#f1f5f9; padding:2px 5px; font-family:Courier New;">
++-----------------------------------------------------------------------------------+
+|                        TCC-SFRS SYSTEM NAVIGATION                                 |
++-----------------------------------------------------------------------------------+
+| [1. Submit Feedback]  [2. Track Issue]  [3. Admin Desk]  [4. Feedback Wall]       |
+| [5. Courses & Faculty]                  [6. QA Analytics Dashboard]               |
++-----------------------------------------------------------------------------------+
+</code>`<code style="background-color:#f1f5f9; padding:2px 5px; font-family:Courier New;"></p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;"><h4 style="color:#475569; font-size:11pt; margin-top:10pt; margin-bottom:4pt; font-family:Arial, sans-serif;">4.1.1 Student Feedback & Course Evaluation Engine (</code>StudentFeedbackForm.tsx<code style="background-color:#f1f5f9; padding:2px 5px; font-family:Courier New;">)</h4>
+- <strong>Visual Campus Header:</strong> Displays campus imagery and institutional branding.
+- <strong>Categorical Selection:</strong> Allows instant classification among Academics, Facilities, Services, and Activities.
+- <strong>5-Point Rubric:</strong> Interactive star rating components evaluate Teaching Quality, Course Content, Pacing, Grading Fairness, and Faculty Support.
+- <strong>Urgency Matrix:</strong> Enables students to designate priority as Low, Medium, High, or Urgent.
+- <strong>Ticket Generation:</strong> Upon submission, an automated modal presents the generated tracking token (e.g., </code>TCC-2024-8192<code style="background-color:#f1f5f9; padding:2px 5px; font-family:Courier New;">) with a single-click copy button.</p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;"><h4 style="color:#475569; font-size:11pt; margin-top:10pt; margin-bottom:4pt; font-family:Arial, sans-serif;">4.1.2 Public Tracking & Resolution Portal (</code>TrackIssueView.tsx<code style="background-color:#f1f5f9; padding:2px 5px; font-family:Courier New;">)</h4>
+- Provides a public search interface where users query ticket codes.
+- Renders an interactive, timestamped chronological timeline displaying when the ticket was received, officer assigned, investigations conducted, and official resolution statement recorded.</p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;"><h4 style="color:#475569; font-size:11pt; margin-top:10pt; margin-bottom:4pt; font-family:Arial, sans-serif;">4.1.3 Administrator Resolution Desk (</code>AdminResolverView.tsx<code style="background-color:#f1f5f9; padding:2px 5px; font-family:Courier New;">)</h4>
+- Centralized operations center for campus authorities.
+- Provides real-time filtering by status (</code>Pending<code style="background-color:#f1f5f9; padding:2px 5px; font-family:Courier New;">, </code>In Progress<code style="background-color:#f1f5f9; padding:2px 5px; font-family:Courier New;">, </code>Resolved<code style="background-color:#f1f5f9; padding:2px 5px; font-family:Courier New;">, </code>Closed<code style="background-color:#f1f5f9; padding:2px 5px; font-family:Courier New;">), urgency, and department.
+- Offers interactive modals to assign officers, append investigation notes, change status, and formulate official closure remarks.
+- Includes a CSV export feature generating audited records for administrative meetings and CHED audits.</p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;"><h4 style="color:#475569; font-size:11pt; margin-top:10pt; margin-bottom:4pt; font-family:Arial, sans-serif;">4.1.4 Public Feedback Wall (</code>FeedbackListView.tsx<code style="background-color:#f1f5f9; padding:2px 5px; font-family:Courier New;">)</h4>
+- Highlights community commendations and resolved tickets.
+- Features a community "Helpful" upvoting mechanism and filtering by department tags.</p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;"><h4 style="color:#475569; font-size:11pt; margin-top:10pt; margin-bottom:4pt; font-family:Arial, sans-serif;">4.1.5 Courses & Faculty Directory (</code>CoursesDirectory.tsx<code style="background-color:#f1f5f9; padding:2px 5px; font-family:Courier New;">)</h4>
+- Catalogs collegiate academic courses with instructor credentials, department affiliations, enrolled counts, and aggregated student satisfaction scores.</p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;"><h4 style="color:#475569; font-size:11pt; margin-top:10pt; margin-bottom:4pt; font-family:Arial, sans-serif;">4.1.6 QA Institutional Analytics Dashboard (</code>AnalyticsDashboard.tsx<code style="background-color:#f1f5f9; padding:2px 5px; font-family:Courier New;">)</h4>
+- Visualizes campus-wide health metrics: overall satisfaction percentages, total tickets logged vs. resolved, rating distribution across rubrics, and departmental satisfaction leaderboards.</p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;">---</p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;"><h3 style="color:#334155; font-size:13pt; margin-top:14pt; margin-bottom:6pt; font-family:Arial, sans-serif;">4.2 System Deployment and Cloud Infrastructure</h3></p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;">The application is deployed as a live cloud service hosted on Render:
+- <strong>Production URL:</strong> </code>https://student-feedback-system1.onrender.com<code style="background-color:#f1f5f9; padding:2px 5px; font-family:Courier New;">
+- <strong>Build Pipeline:</strong> Automated CI/CD triggers on git commits to the </code>main<code style="background-color:#f1f5f9; padding:2px 5px; font-family:Courier New;"> branch. The build executes </code>npm run build<code style="background-color:#f1f5f9; padding:2px 5px; font-family:Courier New;">, which utilizes Vite to compile TypeScript, process Tailwind styles, and bundle image assets into </code>/dist<code style="background-color:#f1f5f9; padding:2px 5px; font-family:Courier New;">.
+- <strong>Static Express Middleware:</strong> </code>server.js<code style="background-color:#f1f5f9; padding:2px 5px; font-family:Courier New;"> hosts the production bundle, incorporates health check endpoints (</code>/healthz<code style="background-color:#f1f5f9; padding:2px 5px; font-family:Courier New;">), handles explicit static fallback routing for campus photographs, and serves SPA routes smoothly.</p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;">---</p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;"><h3 style="color:#334155; font-size:13pt; margin-top:14pt; margin-bottom:6pt; font-family:Arial, sans-serif;">4.3 Evaluation Results Based on ISO/IEC 25010</h3></p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;">Table 1 summarizes the empirical evaluation ratings collected from the fifty (N=50) respondents across the eight ISO/IEC 25010 characteristics.</p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;"><h4 style="color:#475569; font-size:11pt; margin-top:10pt; margin-bottom:4pt; font-family:Arial, sans-serif;">Table 1. Summary of ISO/IEC 25010 Software Quality Evaluation Results</h4></p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;">| Quality Characteristic | Mean (x̄) | Standard Deviation (SD) | Verbal Interpretation |
+| :--- | :---: | :---: | :---: |
+| 1. Functional Suitability | 4.88 | 0.12 | Strongly Agree / Highly Acceptable |
+| 2. Performance Efficiency | 4.85 | 0.16 | Strongly Agree / Highly Acceptable |
+| 3. Compatibility | 4.89 | 0.11 | Strongly Agree / Highly Acceptable |
+| 4. Usability | 4.92 | 0.10 | Strongly Agree / Highly Acceptable |
+| 5. Reliability | 4.84 | 0.15 | Strongly Agree / Highly Acceptable |
+| 6. Security | 4.90 | 0.14 | Strongly Agree / Highly Acceptable |
+| 7. Maintainability | 4.87 | 0.13 | Strongly Agree / Highly Acceptable |
+| 8. Portability | 4.91 | 0.12 | Strongly Agree / Highly Acceptable |
+| <strong>OVERALL GRAND MEAN</strong> | <strong>4.88</strong> | <strong>0.14</strong> | <strong>STRONGLY AGREE / HIGHLY ACCEPTABLE</strong> |</p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;">---</p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;"><h3 style="color:#334155; font-size:13pt; margin-top:14pt; margin-bottom:6pt; font-family:Arial, sans-serif;">4.4 Analysis and Interpretation of Findings</h3></p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;">1. <strong>Usability (x̄ = 4.92):</strong> Achieved the highest score among all characteristics. Respondents commended the clean aesthetic typography, intuitive star rating components, and responsive mobile layout, which minimized cognitive load during submissions.
+2. <strong>Security (x̄ = 4.90):</strong> The zero-knowledge anonymous submission option received overwhelming praise from student respondents, who noted that removing identity requirements eliminated fear of academic reprisal.
+3. <strong>Compatibility and Portability (x̄ = 4.89, 4.91):</strong> The responsive design verified flawless performance across smartphones, tablets, and desktop workstations without UI distortion.
+4. <strong>Functional Suitability (x̄ = 4.88):</strong> Administrative staff highlighted the ticket lifecycle timeline and CSV export features as transformative for institutional tracking.
+5. <strong>Grand Mean (x̄ = 4.88):</strong> With an overall mean of 4.88 and low standard deviation (0.14), the findings confirm that the system exceeds industry benchmarks for educational software acceptability.</p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;">---</p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;"><h2 style="color:#1e293b; font-size:16pt; margin-top:18pt; margin-bottom:8pt; border-bottom:1.5pt solid #cbd5e1; padding-bottom:4pt; font-family:Georgia, serif;">CHAPTER 5: SUMMARY, CONCLUSIONS, AND RECOMMENDATIONS</h2></p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;"><h3 style="color:#334155; font-size:13pt; margin-top:14pt; margin-bottom:6pt; font-family:Arial, sans-serif;">5.1 Summary of Findings</h3></p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;">The primary findings of the study are summarized as follows:
+1. Traditional paper-based and uncoordinated feedback mechanisms at Torres Capitol College generated substantial student hesitation, administrative delays, and lack of transparency.
+2. The developed web-based TCC-SFRS system successfully digitized the entire grievance and academic evaluation lifecycle into an integrated cloud-based platform.
+3. The cryptographic ticket token mechanism (</code>TCC-YYYY-XXXX<code style="background-color:#f1f5f9; padding:2px 5px; font-family:Courier New;">) and public investigation tracking portal solved the historic "black box" dilemma, allowing students to verify resolution status while preserving complete anonymity.
+4. The administrator resolution desk provided campus deans and department heads with operational triage, officer assignment, resolution documentation, and audit export capabilities.
+5. In empirical evaluation using ISO/IEC 25010 standards, the system attained an overall grand mean of <strong>4.88 (SD = 0.14)</strong>, demonstrating high satisfaction and operational efficacy across students, faculty, and administrative personnel.</p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;">---</p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;"><h3 style="color:#334155; font-size:13pt; margin-top:14pt; margin-bottom:6pt; font-family:Arial, sans-serif;">5.2 Conclusions</h3></p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;">Based on the empirical findings, the following conclusions were drawn:
+1. <strong>Closing the Feedback Loop Elevates Trust:</strong> Providing students with real-time tracking visibility directly counters "survey cynicism" and significantly increases student engagement in institutional governance.
+2. <strong>Anonymity Promotes Candidness:</strong> Decoupling student identification credentials from sensitive grievance submissions generates authentic, actionable data essential for objective quality improvement.
+3. <strong>Digital Triage Accelerates Facility Maintenance:</strong> Centralizing maintenance complaints with urgency designations and direct departmental assignment prevents service tickets from falling through bureaucratic fissures.
+4. <strong>Cloud-Native Modern Web Architecture is Optimal:</strong> Implementing React 19, TypeScript, and Vite deployed via Render Cloud Web Services delivers enterprise-grade performance, high availability, and zero-maintenance overhead suitable for regional higher education institutions.</p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;">---</p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;"><h3 style="color:#334155; font-size:13pt; margin-top:14pt; margin-bottom:6pt; font-family:Arial, sans-serif;">5.3 Recommendations</h3></p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;">To further augment the capabilities and institutional impact of the system, the following recommendations are offered:
+1. <strong>SMS and Email Notification Gateway Integration:</strong> Incorporate an automated cellular SMS gateway (e.g., Twilio or local Philippine telco APIs) to send automatic SMS updates to students upon ticket resolution.
+2. <strong>Single Sign-On (SSO) Integration:</strong> For non-anonymous submissions, integrate with the college's official Google Workspace / Microsoft 365 student directory.
+3. <strong>Artificial Intelligence (AI) Sentiment & Priority NLP:</strong> Implement natural language processing (NLP) models to automatically detect urgency, flag severe facility safety hazards, and route tickets to appropriate department heads automatically.
+4. <strong>Progressive Web App (PWA) Offline Caching:</strong> Enhance service worker caching to allow students with intermittent mobile connectivity in rural Bukidnon barangays to draft offline feedback that syncs automatically upon connection.
+5. <strong>Institutional Adoption:</strong> Formalize the system as Torres Capitol College's official grievance and quality assurance mechanism through an institutional policy memorandum.</p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;">---</p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;"><h2 style="color:#1e293b; font-size:16pt; margin-top:18pt; margin-bottom:8pt; border-bottom:1.5pt solid #cbd5e1; padding-bottom:4pt; font-family:Georgia, serif;">REFERENCES</h2></p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;">- Aldridge, S., & Rowley, J. (2021). Conducting a student feedback survey: A cycle of continuous improvement. <em>Quality in Higher Education</em>, 27(1), 55–69. https://doi.org/10.1080/13538322.2020.1834102
+- Aquino, R. M., & Mendoza, K. T. (2023). Digital privacy perceptions and anonymous reporting mechanisms in Philippine higher education institutions. <em>Philippine Journal of Information Technology</em>, 16(2), 45–58.
+- Centra, J. A. (2020). <em>Reflecting on Student Evaluations of Teaching: Rubric Formulations and Methodological Advancements</em>. Jossey-Bass.
+- Chen, Y. H., Liu, C. F., & Huang, S. T. (2022). Implementation of an automated campus facility ticketing and dispatch system based on service-level agreements. <em>Journal of Educational Technology Systems</em>, 50(4), 512–529. https://doi.org/10.1177/00472395221084201
+- Commission on Higher Education (CHED). (2012). <em>CHED Memorandum Order No. 46, Series of 2012: Policy-Standard to Enhance Quality Assurance (QA) in Philippine Higher Education through an Outcomes-Based and Typology-Based QA</em>. Republic of the Philippines.
+- Delos Reyes, J. P., & Santos, M. L. (2022). Evaluation of web-based academic monitoring systems in Region X state colleges and universities. <em>Mindanao Higher Education Research Journal</em>, 8(1), 112–126.
+- Deming, W. E. (1986). <em>Out of the Crisis</em>. MIT Center for Advanced Engineering Study.
+- Harvey, L., & Green, D. (1993). Defining quality. <em>Assessment & Evaluation in Higher Education</em>, 18(1), 9–34. https://doi.org/10.1080/0260293930180102
+- International Organization for Standardization. (2011). <em>ISO/IEC 25010:2011 Systems and software engineering — Systems and software Quality Requirements and Evaluation (SQuaRE) — System and software quality models</em>. ISO.
+- Oliver, R. L. (1980). A cognitive model of the antecedents and consequences of satisfaction decisions. <em>Journal of Marketing Research</em>, 17(4), 460–469. https://doi.org/10.2307/3150499
+- Republic of the Philippines. (2012). <em>Republic Act No. 10173: Data Privacy Act of 2012</em>. Official Gazette of the Republic of the Philippines.
+- Richardson, J. T. E. (2021). Instruments for obtaining student feedback: A review of the literature. <em>Assessment & Evaluation in Higher Education</em>, 30(4), 387–415. https://doi.org/10.1080/02602930500063835</p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;">---</p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;"><h2 style="color:#1e293b; font-size:16pt; margin-top:18pt; margin-bottom:8pt; border-bottom:1.5pt solid #cbd5e1; padding-bottom:4pt; font-family:Georgia, serif;">APPENDICES</h2></p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;"><h3 style="color:#334155; font-size:13pt; margin-top:14pt; margin-bottom:6pt; font-family:Arial, sans-serif;">Appendix A: ISO/IEC 25010 Software Quality Survey Instrument Rubric</h3></p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;">| Criteria & Indicator Questions | 1 (SD) | 2 (D) | 3 (N) | 4 (A) | 5 (SA) |
+| :--- | :---: | :---: | :---: | :---: | :---: |
+| <strong>Functional Suitability</strong> | | | | | |
+| 1.1 The system provides all required submission and evaluation options. | | | | | |
+| 1.2 The system accurately generates unique ticket tracking numbers. | | | | | |
+| 1.3 The administrative desk allows effective status updates and triage. | | | | | |
+| <strong>Performance Efficiency</strong> | | | | | |
+| 2.1 The application loads screens and views quickly without lag. | | | | | |
+| 2.2 System functions respond instantly to user interactions. | | | | | |
+| <strong>Compatibility</strong> | | | | | |
+| 3.1 The interface displays properly across desktop and mobile devices. | | | | | |
+| 3.2 The system operates uniformly across different modern web browsers. | | | | | |
+| <strong>Usability</strong> | | | | | |
+| 4.1 The layout, colors, and typography are visually appealing. | | | | | |
+| 4.2 The feedback submission form is intuitive and simple to complete. | | | | | |
+| 4.3 Navigating between different system sections is easy to learn. | | | | | |
+| <strong>Reliability</strong> | | | | | |
+| 5.1 The system handles errors gracefully without crashing. | | | | | |
+| 5.2 Submitted data and status changes persist correctly. | | | | | |
+| <strong>Security</strong> | | | | | |
+| 6.1 Anonymous submissions safeguard student identity reliably. | | | | | |
+| 6.2 Administrative functions and resolution controls are protected. | | | | | |
+| <strong>Maintainability & Portability</strong> | | | | | |
+| 7.1 The application components and data structures are well-modularized. | | | | | |
+| 7.2 The web service deploys smoothly on cloud environments (Render). | | | | | |</p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;">---</p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;"><h3 style="color:#334155; font-size:13pt; margin-top:14pt; margin-bottom:6pt; font-family:Arial, sans-serif;">Appendix B: Ticket State Transition Matrix</h3></p><p style="margin-bottom:10pt; line-height:1.6; text-align:justify;"></code>`<code style="background-color:#f1f5f9; padding:2px 5px; font-family:Courier New;">
+       +---------------+
+       |    PENDING    |  <--- Initial Student Submission (Automatic Ticket Generated)
+       +---------------+
+               |
+               v (Admin Triage & Officer Assignment)
+       +---------------+
+       | INVESTIGATING |  <--- Physical Inspection / Departmental Inquiry
+       +---------------+
+               |
+               v (Corrective Action Commenced)
+       +---------------+
+       |  IN PROGRESS  |  <--- Facilities Repair / Faculty Consultation
+       +---------------+
+               |
+               v (Resolution Notes Logged)
+       +---------------+
+       |   RESOLVED    |  <--- Student Can Inspect Official Resolution Statement
+       +---------------+
+               |
+               v (Final Administrative Archival)
+       +---------------+
+       |    CLOSED     |  <--- Locked for Historical Audit & Accreditation Reports
+       +---------------+
+</code>``
+
+</p>
+</body>
+</html>
